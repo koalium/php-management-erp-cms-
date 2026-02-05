@@ -1,0 +1,118 @@
+
+php base
+{
+(list view as lv):  header: title and btn add new ; body: list selectable scrollable paginated, icon btn open edit remove for each row ;  form to add or edit selected save update remove or cancel ;
+}
+
+{
+/db/ folder for database depends:
+{
+./dbc.php is used just for connecting to mysqldb: esmartis_project_db , user: esmartis_user , pass: esmartis1364; control and handle and comunicate through it to database just by its functions;
+at each of any other files never use sql code and sql codes just used in it ;
+}
+
+{
+./dbi.php for database migration , creating tables if not exists 
+}
+
+{
+./dbd.php contain all def data, insert ignored 
+defaults:
+lang : farsi
+theme : dark blue
+setting: setting.json
+
+}
+}
+
+{
+index.php start point and main file
+header.php dynamic creating header
+footer.php dynamic implementing footer
+{
+خروج
+./logout.php
+session destroy when user logout , or after 1 hour automatic and user need sign again;
+}
+
+}
+
+{
+
+فرم ورود
+./sign.php : inputs: username , password , btn sign ;validation inputs, limitations 3 seconds between attempts at backend, 
+if user valid and found :
+ if password valid :
+  if confirmed: 
+    if admin : 
+     ./admin/admin.php 
+    else: ./dashboard/dashboard.php ;
+}
+
+{
+/admin/ folder for
+admin.php as admin panel to
+users.php lv of 
+user.php crud form 
+admin can add remove edit change password and... of users
+}
+
+{
+/dashboard/ folder
+dashboards.php lv of 
+dashboard.php as user customized dashboards 
+setting.php user setting for customization 
+
+}
+
+{
+/project/   folder:
+very advance complete developed version handling and update and change tracking with very rich visual feedbacks and log activity with hierarchical and permisdion 
+collabration and members
+
+projects.php lv of projects and its stare unique color and... for
+project.php crud form 
+documents.php lv of 
+document.php crud form : documenting project and its documents 
+collabrations.php lv of
+collaboration.php crud form : to 
+members.php lv of
+member.php crud form: member of collabration of project with soecific permisdions and access ....
+tasks.php lv of
+task.php crud form : task for member of collabration of project to act in specific timesheet and schedule on specific task on project
+files.php lv of project file
+file.php crud form 
+updates.php lv of updates that ...
+update.php to update specific feature or... at project
+uploads.php lv of uploaded...
+upload.php backend handler to upload and handle update uploaded file if ... and version control it with describes and ..
+
+each update , change , save , edit , delete and... can be undo and redo and user at each moment can return to any other version ,
+users can create new branch on the base of existing branch to seperation of developing without causing each others
+at start project has default branch main, and first action creation , and update ,
+each act preserve and log and can be reset and undo through ...
+file can be everything and project files can be structure with folders and sub folders
+overwriting is updating 
+delete or remove : as soft delete also is update
+updater and updated and difference and ...
+please very care of its complexity and developing extreme details
+}
+{
+enhanced modern graphical user interface 
+responsive touchscreen friendly 
+interactive , attractive , reactive , ui 
+colorful, interaction , very rich visual feedbacks , advance modern features integration
+standalone complete developed ,
+frameworkless and complete independent app 
+developed implementing any needs without outside world needs 
+focus to best known and implementing capabilities beyonds 
+do it with highly focus
+accurate
+extreme details 
+you are the best scripting and developer and your main reason is implementing this app complete and correct 
+revising , recheck and better thinkink , ultrathink and deepthink to implement it develop it and complete it.
+}
+
+
+
+

@@ -1,0 +1,310 @@
+
+{
+
+{
+(list view as lv):  header: title and btn add new ; body: list selectable scrollable paginated, icon btn open edit remove for each row ;  form to add or edit selected save update remove or cancel ;
+}
+,
+{
+(form CRUD as fc): form with header title and btn icon next , prev to change content if existed next or prev ... , multiple inputs type according to implemention and fill with data if existed , used for creating new and or edit selected , save , clear , close , remove , back and some time with details or open btn to go deeper... and btn save , remove , reset , 
+}
+,
+{
+(database table install if not exist and insert ignored default as dt) : creating table if not existed and insert ignored default to table ;
+}
+so lfd means : lv of that + cf form + dt file,
+contact lv fc dt api package as lfdp  : 
+  contacts.php : lv of
+  contact.php : fc 
+  contactdt.php : dti
+  contact_api.php : backend api handler
+}
+,
+,
+
+{
+app use absolute address and define main and important address for use ,
+app use multiple theme , default theme is dark blue gradient live theme 
+app use predownloaded and exsited font at local at asset/font/ 
+app use predefine colors as variable that defined at colors.css and used for each item , each color for each item and ir background must declare at colors.css as variable and used it
+app used jalali date as default date time
+app use jalali datetime , jalali years , jalali month and month name , jalali day and day name , jalali holiday , jalali friday as weekend, jalali Saturday as start of week , 
+app use jalali date picker : jalali graphical interactive datepicker : jalali-datepicker.js , jalali-datepicker.css , jalali-calendar.js ,..
+app 
+}
+,
+,
+{
+/assets/css/ folder:
+jalali.css
+jalali-datepicker.css
+jalali-timepicker.css
+jalali-datetime.css
+colors.css
+style.css
+theme.css
+main.css
+app.css
+
+
+}
+,
+{
+assets/js/ folder:
+jalali-datepicker.jd
+jalali.js
+jalali-timepicker.js
+jalali-calendar.js
+jalali-datetime.js
+main.js
+app.js
+theme.js
+language.js
+script.js
+
+}
+,
+{
+assets/font/ folder:
+fonts that used must diwnload and preserve here , just one tine downloads
+vazirman
+tahoma
+nazanin
+lotus
+arial
+cabiri
+sans serif
+persian and english multiple size and type snd fonts
+getfont.php : attempt to download fonts gir use here
+}
+,
+{
+/assets/img/
+svg icon and ...
+png 
+ico
+fav.ico
+image things
+svgcreator.php to create and save svg for later use here
+imgdiwnloader.php to get download name and save needed in here
+}
+,
+,
+{
+'/' folder root home and root folder :
+config.php
+dbc.php
+index.php
+header.php
+footer.php
+}
+,
+,
+{
+/database/ folder:
+dbc.php: connect communicate handle and control database , every requests for databSe handle through this , its secure snd can't sql injection 
+dbi.php : create table if not exist for table that needed : users , contacts, department , user_activity , profile , user_profile , roles , permissions, user_permissions , dashboard_items , dashboards , template_dashboard , default_dashnoards , customized_dashnoard , account, account_type , banks , currency, wallet , card_bank , token , contact_account , transactions, transaction_type , ledgers , notebooks , notes , attachments, comments, tags , labels , categories, 
+}
+,
+{
+/financial/ folder:
+index.php as financial dashboard;
+accounts.php lv of
+account.php crud form
+
+transactions.php lv of
+transaction.php crud form
+
+banks.php lv of
+bank.php crud form
+
+currencies.php lv of
+currency.php crud form
+
+taxs.php lv of
+tax.php crud form
+
+debts.php
+debt.php
+
+loans.php
+loan.php
+
+assets.php lv of
+asset.php crud form
+
+bankcards.php lv of
+bankcard.php crud form
+
+wallets.php lv of
+wallet.php crud form
+
+tokens.php lv of
+token.php
+
+ledgers.php lv of
+ledger.php as ledger...
+
+budgets.php lv of
+budget.php crud form
+
+proformas.php lv of
+proforma.php
+
+}
+
+{
+/sign/ folder:
+singin.php form signin
+logout.php to logout and terminate session
+auth.php authentication of ...
+}
+
+{
+/setting/
+index.php its ...
+settings.php lv of
+setting.php
+
+profile.php
+status.php
+images.php
+image.php
+sessions.php
+session.php
+devices.php
+device.php
+
+}
+{
+/contact/ folder:
+index.php for contacts dash
+contacts.php lv of
+contact.php crud form
+addressbooks.php lv of
+addressbook.php crud form
+
+}
+
+{
+/calendar/ folder:
+index.php graphical interactive calendar
+
+events.php lv of
+event.php crud form
+
+todos.php lv of
+todo.php crud form
+
+reminders.php lv of
+reminder.php crud form
+
+lists.php lv of
+list.php crud form
+
+}
+
+{
+/notification/
+index.php notif dashboard 
+notifications.php lv of
+notification.php crud form 
+api.php backend
+notification_handler.php
+}
+
+{
+/note/
+index.php its dash
+notes.php lv of
+note.php crud form
+
+notbooks.php lv of
+notbook.php crud form
+
+whiteboards.php lv of
+whiteboard.php crud form
+
+planbooks.php
+planbook.php
+
+mindmaps.php
+mindmap.php
+
+sketchs.php
+sketch.php
+schematics.php
+schematic.php
+drawings.php
+drawing.php
+
+}
+
+{
+/messenger/ folder:
+index.php its dash
+chats.php lv of
+chat.php 
+
+messages.php lv of
+message.php
+
+chatrooms.php lv of
+chatroom.php
+
+shares.php
+share.php
+
+voicecalls.php
+voicecall.php
+
+fileshares.php
+fileshare.php
+
+screenshare.php
+
+drafts.php
+ privates.php
+private.php
+saveds.php
+saved.php
+search.php
+
+apim.php
+
+}
+
+{
+/repository/ folder;
+index.php as its dash
+repositories.php lv of
+repository.php
+
+collaborations.php
+collaboration.php
+files.php
+file.php
+difference.php
+commits.php
+commit.php
+
+branches.php
+branch.php
+
+uploads.php
+upload.php
+
+updates.php
+update.php
+
+histories.php
+history.php
+
+revers.php
+versions.php
+version.php
+pulls.php
+sync.php
+push.php
+}
+

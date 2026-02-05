@@ -1,0 +1,120 @@
+implementing php ,
+
+config.php for default configuration;
+dbc.php : connect communicate and use , mysqldb: esmartis_repo_db , user: esmartis_user , pass: esmartis1364;
+dbi.php: create tables if not existef;
+dbd.php insert ignore default to db tables like: user : ahmad , 654321 ; admin , 654321 ; puya , 54321 ; cto : 654321 ; boss , 654321 ; ceo , 654321 ; user, 654321 , engineer, 654321; guess, 654321; outside: 654321 ; viewer, 654321;
+index.php start and main file ;
+
+dashboard.php is dashboard , if admin then admin dashboard can add or and edit user and their permission and password and editing ...
+
+
+sign.php is sign in form that check and confirm username and password with users table if not signed in ;
+
+profile.php to user change their password and other profile settings 
+
+signout.php to terminate session and sign out user when logout btn... ;
+{
+repositories.php lv of
+{
+repository.php crud form
+{
+repository:
+{creator: user create it first time
+owner: default creator , can change later;
+admin: default owner, can set to others;
+editor, viewer admin ser them and edit..;
+}
+{
+id , name , info , ...
+}
+{
+active , archive , deleted soft...
+}
+{
+branch: default "main"
+}
+{
+structure:
+root of its path "/" as base addres folder;
+folder and subfolder , files and...
+default it create and fill at start of creation :
+folders : .env , .rep , src , res , doc 
+files : readme.md , guide.md , info , ...
+these file and folder creared and fill with default and saved for repository as it created
+}
+{
+browsing into folder and subfolders, at each path user can:
+add new folder , remove selected folder , rename folder , copy selected folder to , move folder from and to ...
+user can select multiple file and folder at once : then can move or copy or delete all of selection at once ,
+user can rename file and ir folders;
+user can create file and folders;
+user can upload file or multiple of files ar once as list of files together,
+user can upload all of folder contain at once complete,
+if any file had equal name uploaded before or its name is duplicating, system had mechanism to preserve old file and by version controlling, find diffrence between these two files and if diffrent, then old one preserved for return or undo and new file get latest version and new file used and shown as final file with its version , user can reverse this action and undo this update , undo also preserve new file as old file and everything must preserve and user can turning back and dosngrading through history without losses of anything and its lossless version controller and focument and file handler ,
+}
+}
+}
+}
+
+/repository/ folder;
+user can create new Repository and save it;
+user can open prev created repository:
+  repository.php
+  repository has its name , id , info , owner , creator , ...., permissions and its structure and items ,
+  repository had specific permissions to specific users: view for users to seen it , read for user to read and download, write to add to it , edit to read and write and edit on it , full or admin to grant and can add new users and edit permissions of users , owner: can change and edit others permissions but others cant ...
+  repository has one or multiple branch : default branch "main " when repository created , branches also can had its own specific owner plus to repository owner and be that specific branch admin and just had at that branch full authority;
+  repository has its file structure that shown as file browser view with its latest approved file and folders ;
+  Repository structure root folder shown ad "/ ",
+  repository readme.md file with some default texts,
+  repository info.txt file with some default text,
+  repository .rep , .env  folders hidden,
+  repository src , res , folders;
+  created and specific and owned by and for each repository at creation;
+  user can create new folder , subfolder and edit and save and update them in, user can rename folder , remove folder and its underneath and all of it had in directory at folder in repository , delete always soft delete and file or folder preserve in storage as prev version of ...;
+  user can open and browsing into folder and subfolder of repository;
+  user can create , add , edit , remove , update , upload file or list of files and folders , paginated, scrollable, selectable , sortable ,vresortable , searchable , filtrable advance browsing to repository, folder or and subfolder , also user can upload folder and all in folder at once and comolete by select and upload folder at once;
+  user can download selected file or folder from repository or its sub folders,
+  user can download repository as whole...;
+  user can upload files or folders into  any folder or subfolders: if it had same file name , its version update and just shown that latest version file to everyone ,
+  each update and change saved and done through commit with describe it and name and get id and known time and user tgat done ,
+  old files also preserve  and handled for time that user revise or return or undo or select specific commit and history to redo and each change can be reverse and user can undo each of changes , 
+  user can create new branch and make developing and updating of repository files in parallel with complete independent and version handling system and precise diffrence finding and shown between files and change if user wants,
+  user can select and relate local folder select and relate to repository for its uses and save it , so that folder and its repository syncing,
+  sync cause to local folder and repository sync their data to later and latest version of each file and complete each side by files that it had not
+  push: it upload files that newest aand completer at local folder from repository that related to it and make update to latest version for files ..
+
+  pull: download latest version of files if repository had newst ones
+  upload: select multiple files and upload that list , if anyone with same name and... has uploaded before , make the new version to use and shown ...
+  very advance version control and document version handling system
+  enhance modern easy to use graphical user interface
+do not create doc or readme or md files , never script help and summary and guide file ever
+do not implement any help and doc and readme like files
+do not create install guid or readme or anything like them ever
+
+
+
+each user can seen all repositories that had permissions to and can edit and uoload to when had permission  , 
+can download and view all with just view permission or in viewe collabrations, 
+can edit and update with permissions specific or be in editor collaboration for that , 
+each repo item and file and folders also had open and edit or rename and remove icon btn , remove as soft delete , edit and save cause to make new file and preserve old file and can distinguish and seen diffrence between each step and each commit reversable
+user can compare change and diffrence between 2 version of file that wants and fir default seen diffrence and comparison between two latest  versions of files if file had more than one version 
+
+user can add another user to its repository as editor to permission them for edition , user can change their password at profile.php, 
+version handling system  must preserve old files , find and shown diffrence between,and make version controlling to use latest and new file for use ,
+ user can reverse its edit and commit and update , can select and return to each commit and update and or change history that happened , history and repository be as it be that old time ...
+
+user can delete folder and its contained at once after confirm its be soft delete also commit things ,
+every remove and delete be soft delete and never delete file and folder from storage
+over writing also is soft overwrite and old file also preserve and new file with its version shown and used
+
+  repository contains and had its specific owned one or multiple projects that can declare under it,
+  repository can had no project and hadn't any project default,
+  user can add multiple project to repository 
+  repository project can had its own soecific task and multiple task for each users with complete defenition and timesheet and schedule for that soecific task of specific project of soecific repository,
+  each task had its own multiple report in diffrent situation that user write that report for that specific task that is user task of project and can create and write multiple report at multiple time for multiple or one tasks with very complete info and trackable;
+
+user can search advance into file and folder and project and repoband task and report with advance filter and searching system
+ 
+   
+

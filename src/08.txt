@@ -1,0 +1,51 @@
+messenger standalone web app,
+frontend: html base , fully developed indipendent style css integrated intractive responsive, js pure complete implementing integrated , fully developed,
+frontend pwa browser running install like:
+full screen ui touchscreen friendly for mobile device and responsive in browser full screen frontend independent and complete to install ...
+using ajax , php , css , JavaScript, style fully developed indipendent, pure JavaScript without any firmware,
+rich visual feedback,
+dark copper theme,
+use nothing from outside world and developing and implementing all of it needs,
+all of forms created implementing ar front end:
+signin.php
+signup.php
+passwordforgot.php
+chats.php list of prev chat
+chat.php: text , voice, image , file , or map and location and every message 
+videocall.php stream video call between users that ...
+voicecall.php stream voice call 
+settings.php
+profile.php
+contacts.php list view of
+contact.php crud form
+search.php to search for contact or message ... very advance high end full features and filters and capabilities for best search and fibd system
+
+also features :
+notification
+user can add another user to chat and make group chat
+user can left the chat
+usee can delete  messages owned
+user can react to message : reply , emojis, forward , ....
+user can add comment to message 
+user can refrence message
+user can open and view image 
+user can customize its chat : background, font , style , ....
+
+
+backend:
+/api/ folder
+single php file for api manager as apim.php
+api and communication through ./api/apim.php as api manager then it send and each api to its handler
+api very deep and respond care
+
+/db/ folder
+dbc.php at server to connect to mysql: esmartis_messenger , esmartis_user , esmartis1364;
+dbi.php create tables if not existed on 
+
+specific and validation 
+username len > 2 ,  unique
+pass len > 2
+
+each action has its request that
+api has its respond and handles
+

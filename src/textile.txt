@@ -1,0 +1,338 @@
+/product/template/ folder for these:
+
+{انواع آماده آیتم های پروژه 
+تمپلت های پیش آماده به عنوان آیتم جهت افزودن به پروژه:
+templates.php :
+custom.php یک آیتم با مشخصات و ویژگی های کاملا قابل تغییر و هنوز مشخص نشده و مشخصات و ویژگی های کلی را میگیرد
+  station.php یک ایستگاه تهویه نساجی از پیش تعریف شده که میتوان تمام مقادیر و ویزگی های آن را ویرایش و تغییر و اختصاصی کرد
+  fp.php یک نمونه پیس آماده فیلتر پلن
+  stationplc.php یک نمونه پیش آماده تابلو برق کنترل plc که به ایستگاه تهویه متصل میشود و جهت کنترل ایستگاه تهویه ای است که قبلا به پروژه افزوده ایم و باید به یک ایستگاه تهویه یا یک فیلتر پلنت متصل شود.
+  fpplc.php
+
+  boiler.php
+
+  boilerplc.php
+
+  fanring.php
+
+  rupturefisk.php
+
+  flamearrester.php
+
+  plenum.php
+
+  aircooler.php
+
+  shelltube.php
+
+  airwasher.php
+
+  fogac.php
+
+  acpack.php
+
+  centrifugefan.php
+
+  textileac.php
+
+  duct.php
+
+  vent.php
+
+  axialfan.php
+
+  silencers.php
+
+  bellring.php
+
+  plc.php
+
+  damper.php
+
+  louver.php
+
+
+
+{
+ then user can developing and adding project items internal parts and sections and design , seen change result, get some advise , add or and edit remove anything it wants or its specific or property or counts to better consistent results, save update them under related owned by project as its items and edit them to its needs ::
+}
+
+<<
+project items has its own specification that can edit after adding to project according to user interaction:
+number that used are defaults and can editable,
+[
+./stations.php list view of stations with icon btn open , remove , edit ..;
+AC Stations: 
+  ./stationll.php ;
+add edit station: input name and macinery...  AC_1 to ac n .. spinning finishing or....;
+   [ spaces :
+      add , edit space :{ inputs:: name  spinning def, length in range 200 :50m def, width in range 160 :40m def , height in range 12 :5m def  , ACH in range 50 :35 def ,}..., {knitting  , 44 , 21 , 5 , 35 },.., {free area , 44 , 12 , 5 , 20 }..,..; 
+      {area = w * l , vol = a * h , afh = vol * ach for each space , at end of list sum of the afh as afht , afst = afht/3600 m3/s;}
+      afts is the airflow that based ;
+]
+    [duct:
+     ./duct.php 
+     {  feed:
+           {main : inputs : diameter 1.5 m , material : galvanize , count : 1;}
+           {branchs: input : diameter 1 , count 3 , material galvanize, }
+}
+      { return:
+          {main: inputs: width 1.8m , height 2 m , count 1 ;}
+          {branch: inputs: width 1.6 , height 1
+2 m , count 4}
+}
+ ]
+,
+[
+    Vents:
+      { vent.php
+        {{feed vent as fv : fv cross section as fvcs  circular   , fv width as fvw def 0.7* diameter ,  fv length as fvl= 2 * fvw def ,input editable w  and l , fv number as fvn , total fvcs as tfvcs=  fvn * fvl * fvw;}
+           {air velocity as av , av at fv as avfv better around 2.2m/s , av > 4 feed vent with breaker;}}
+       {return:
+   3-3-2 - {return vent as rv , rv can be narrow or  width : narrow ones had: rv w def 5 cm and r l = rd width and vent count at each duct , width  vents had w in range 50cm;
+        rv cross section as rvcs and rv number as rvn and total rvcs as trvcs= rvcs * rvn  } {optimizing to av at rv around  3 m/s }...;;}
+],
+[
+   {ARF:
+      {./arf.php
+         {rotary filter :
+        inputs: selection:
+          diameter 2,2.5,3 m , def 2.5 m
+          len 1.7 , 3.4 ,5.1 m , def 5.2 m;}
+          {then calc:
+            cross section= pi*d*l
+            total cs = arf count * cs 
+            av<= 1.22 m/s better around 1}
+            {for each rotary filter this pack added to components and mto bom...:
+             {packaged( two 3k3w dust fan centrifuge+  one branch + one duct + one   connection + one brushing header per 1.7 meter len + one mechanism motor 0.25 kw + one motor gearbox 1kw + two fixed dust bag + two potable dust bag + clamps and fitting and flexible ducts );};}
+}} ],
+
+[
+     {dampers :
+     {./damper.php
+     {  dampers: fresh , exhaust , return , }
+      { damper inputs:  height 2.82 , width 1.52m , count 3 ;}
+        {av <= 6.6  , = 5.8 m/s;}
+        {cross section: w*l*count* eff and eff area def 0.92 ; }
+        {exhaust: h , w , c ;}
+ ,
+        {fresh : h , w , c ;}
+,
+       { return : h, w , c ;} }
+}
+],
+[
+    { heating coil:
+       {./coil.php
+         { inputs : rows 1,2,3 : def 2 , width 2.5 ,   height 1.52 , count 4 ;}
+           {height never exceed 1.52m} ;;}
+}
+],
+[
+    {AirWasher:
+      {./airwasher.php
+          {inputs : height as awh 3.2 m , width as aww 5.1 m ;}
+         {cs = w*h, av <=3.77 never exceed 4m/s;}
+        { {(collectors: pipe size 4 inch def , len = aww-0.2 , header each side cap , flange inlet , count 1 per zone , count 2 because def zone count 2 , }{with one 8 inch 1 m length pipe as water distributers between collector an pumps with its inlet and outlet connections and flanges;}}
+        { {risers count as awrc: 2*(w/0.304) , 1 1/4 inch pvc pipe ,spacing 0.304 , len as awrl = awh - (collector size * 0.0254 )- 0.05 }, {each has cap and bush and seald connection to collector;}}
+         {{nozzles count as awnc = awrc *( awrl )/0.076 },{ each has body and header and steel clamps ;}}
+         {water flow= awnc*2.5*60/1000 m3/hr;}
+        {{{ pump  head 35m for water ;}
+        { pump selection calculation :
+           centrifuge 1000rpm 3phase motor water pump;
+         {  pump head size: impeller diameter and thicknesd : must calc select standard};
+           {pump motor power calc select standard , 3 phase ac 1500 or 1000 rpm;
+           piping : size for suction and charge ,}}{ connections and flanges ,reducers and joints , inlet , outlet , filters as cast iron with its connection and flanges , mesh plated ss or galvanize as filter , flange , elbow, connections , overflow plate vent v shape for smoth water flow to suction ,}  , {and... must select calc standard add result ;)}}
+     {airbaffel of airwasher:
+     {air washer airbaffels: inputs: height as abh 0.4m , abw 0.3 , }{weight as abm13.5 , material abs , }{count as abc = floor (aww/ abw ) * floor( awh/abh) , total weight as abtw = abc * abm ;}}
+{
+     eliminators of airwasher:
+      {air washer eliminators : {inputs: material Abs , height as aweh 1.52 ,}{ thickness as awet 0.005 ,width as awew  0.152 , spacing as awes 0.076 , weight 1.3 kg }, {count as awec = (aww /awes ) *round (awh/aweh) ,} for {each spacer nut and spacer in 4 rows needs }, {and for its complete save shape solid : fixing rodes , cover plate and other plate galvanize and nut and bolts and so on and on and on added after calc and..}. } ;}
+],
+
+[
+ {{ Fan:
+   { these are axial fans LUWA licence and     design and curve graph using;}
+    {fan diameter mm , blade number , rpm 
+      1120 , 10 , 1500
+      1400, 10 , 1000
+      1600, 10 ,1000}
+    {all Axial fan with aluminum material and  blades , hub and blade connection fixture and motor shaft connection , each fan  balanced to very presicion aroun gram per  meter balancing after carefull assemble;}}
+   { ./fan.php
+     {{ fan -feed inputs: selection fans : def   1400 selected;}
+     { blade angle: 21,motor power : 22kw , count : 2 ;}}
+      {{fan- return: def 1600 selected ,blade angle 20 ,power 30kw ,count 2;}
+   {fan diameter mm , blade angle degree, motor power kw : }}
+    { 1600 , 10 , 12 ; 1600, 15, 18; 1600,18 , 30 ; 1600 , 21 , 37 ; 1600 , 23 , 45 ; 1600 , 26 , 50 ; 1600 , 29 , 55;; 1400 , 10 , 8 ; 1400 , 18 , 18 ; 1400 , 21 , 22 ; 1400 , 23 , 30 , 1400 , 26 , 30 , 1400 , 29 , 37 ;;
+}
+}
+]،
+{Plc : {select with or without plc;}
+  if with plc:
+{
+{select: with or without soft start;}
+  if with soft start:
+{
+ { select: soft starter device: VFD , Softstarter;}
+ { foreach motor:
+   if power >=10kw: 
+   {add single auto breaker as ab : abm connected to motor as output of autobreaker; contactor from grid to ab , contactor from softstarting to ab ;}
+  else if power< 10kw:
+{ add ab between motor and: add single contactor from grid to ab!
+   }
+
+ }
+
+end of had soft starting capability;
+}
+end of if had plc ;if not had plc : do nothing;
+}
+end of plc;
+}
+]
+end of AC Station;;>>
+;
+
+
+<< another project item:
+start of fp ,فیلترپلن :
+{./fps.php list view of filter plans with icon btn open , remove , edit for each ; and btn add new ;}
+[
+./fp.php
+4- filter plans:
+4-1 : name and specifications
+[
+4-2 : filter rooms:
+./filterroom.php;
+[
+4-2-1 : main fan up to 120 kw centrifuge ferrari fan but defaults 75 kw ;]
+[
+4-2-2 : campactor filter: each room has its own campactor filter mazzini]
+[
+4-2-3: rotary filter: diameter: 2 , 2.5 def , 3 ; len : 1.7 , 3.4 def , 5.1 ;]
+[
+4-2-4: filter disk : one filter disk and its mechanism and motor ]
+[[
+4-2-5:  dust collector mechanism with its brush and connection as station but its fan 5k5w]
+[
+4-2-6: dust fan: two dust fan 5k5w to 9kw def 7 kw centrifugs]
+[
+4-2-7: fixed and mobile filter bag for dust collection]]
+[
+4-2-9: door and handle also vent and window 
+]
+]
+
+;;
+
+boiler as another project item:
+[
+  boiler.php:
+  boiler type , size , power , fuel , components , instruments , piping , condensed line , flanges , steam traps , valves , specific of each , pipings , fuel lines , storages , needs , ...;
+    user just select steam ir hot water and its power needs default 300kw : it must had prepared for range 20 kw to 1500 kw of boilers : components , flanges , piping , valve , size , material , specific, all according to asme and astm where prepare to user just select and attached...;
+]
+
+another project item PLC :
+  {./controls.php : list of control that user can select and remove or add and edit..;}
+[ ./plc.php : to develop and or add or and edit plc system control;
+    plc : as control for any of other project item that added to project : one or multiple of ac stations or filter plants or boilers or optionals or indipendent...;
+     [ if plc related to ac station or filter plant , according to its related specifications:
+  user choose : soft starting or motor full control;
+ if choose soft starting:
+    user must choose soft starting device: soft starter or vfd as soft starter;
+[
+[for each motor :
+   if power > 10kw :
+       if soft starting:
+           motor had: two contactors, one to grid , other to soft starting device , single overload breaker , ...;
+        else if full controller:
+            motor had: single vfd , single overload breaker ;
+    if power <10kw :
+       motor had : single contactor , single overload breaker ;
+]
+[
+for each soft starter or vfd :
+   it has: single breaker overload ;
+]
+[
+for each damper type : exhaust, fresh , return : 3 analog output 0-10vdc to control multiple damper per type by single io for that type , total 3 as default;
+]
+[
+for each sensor:
+  single analog input 4-20ma:
+  temprature sensor: two as default :, one outside , one inside ;
+  humidity sensore: 2 as default ;one outdoors, one indoor;
+]
+[
+for each door and eindow had single switch digital input : total 5 as default ;
+]
+for each steam valve single analog output 4-20ma:
+  single control or gate valve as default;
+]
+[
+hmi if user selected as optional : 7 inch to 15 inch touch user selection;
+]
+
+now as bom : calc any component size and power by high accurate and precise to best selection part: main breaker that carry all power on its own , plc , module, io  , relays , terminals , contactors , breakers , overloads , control phase , emergency system , signal lamps , safety, ground , busbar, cable , wire , tag and duct and container, cabinets, rails , insulation and or any other needs to complete it ;
+]
+[ 
+./plclayout.php enhanced interactive ui ux to user can used as eplan or better ux with color and hint ui very interactive and modern to
+layout and place components on the board with care and standard and best auto placement;
+export to json scad image 
+./plclayout.php
+]
+[
+plcwiring.php:
+to wiring schematic and drawing with colored taged lable to wiring and connection carefully with scad and image output and enhanced ui ux for drag and drop and interactive 
+]
+[ 
+./plccode.php
+auto code generation for multiple code type scl , ladder ,.... according to scenario snd bom and components and needs;
+codes can edit and save and or export as txt or any other needs meaning 
+]
+]
+any plc can be edited insides and add or remove or edit or change its components and behavior 
+]
+
+      
+
+                 
+>>
+{
+ report: 
+   one of the main reason to do all to create and complete reports with very extended and details in it with a lot of flexibility and contains all of work in it::
+   advance selectable highly customized of user needs:
+  ./report.php
+     BOM its not cost in it;
+       ./bom.php indipendent bom lists  with extended needs and detail specific;;
+    MTO very extended and very advance with very detail and addition;
+      ./mto.php for stations and fp indipendent;;
+    Cost only on euro and dollar;;
+       ./cost.php;;
+    documents prev and can get or auto generating for using;
+documents.php
+drawings: 
+   auto generating with its result and predefined thing from its hard core and its base on some rules of auto drawing and auto generating draws for each section seperated and accurate then can scad them;
+  }
+{
+pre existed defined project item ::
+template predefined items for project item usage and used as item to add to project if user wants:
+   ./template.php
+    user can create new or and edit template item for project items  at ./template.php with very rich feature and advance specification and save and use them;>>
+;;}
+
+{
+بخش محاسبه گر هوا برای محاسبات تهویه مطبوع و دما و رطوبت هوا
+ورودی های اصلی دما و درسد رطوبت هست با رطوبت نسبی بر حسب درصد و به کمک این دو بقیه موارد محاسبه میشود.
+  calculator:
+     advance accurate calculations:
+     psychometric of air humidity, 
+       wet temp , dry temp , enthalpy , humidity ratio percentage, humidity absolute gr per kg , and its graph presentation with interactive capability and also point shown and select ...
+        constant wet bulb evaporative cooling,
+        constant wet bulb heatin ,
+        mixing of two diffrent prop air with percentage of each and calc final mixture spec .... ;
+        complicate and sequence of these:
+          air with t1 دمای حباب خشک h1رطوبت نسبی درصد : heating گرم کردن تنها با افزودن حرارت به آن به کمک هیتر کویل: then mixing by air t2 h3 and create mixture air tm hmمحاسبات ویژگی های ترکیب این دو با روش استاندارد و فرمولهای دقیق , then mixed air evaporative cooling with water spray to some rising humidity and its t and h and با عبور از محل پاشش آب ، رطوبت آن افزایش پیدا کرده و تا۹۲ درصد رطوبت نسبی و پیش فرض به ۸۰ درصد رطوبت نسبی و قابل تنظیم رسیده و دمای آن کاسته میشود و ...: شرایط هوای نهایی پس از همه این مراحل : دما و رطوبت نسبی و ....
+}
+
+-

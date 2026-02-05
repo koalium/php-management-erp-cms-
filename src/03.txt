@@ -1,0 +1,202 @@
+project : list view of projects , btn add new ;
+   form project: add new or and edit selected project , save update remove ...;
+project detail: 
+   to implementing and developing selected project !
+user can add multiple project item to project;
+  project items owned and related to its parent projects;
+  project items can edit and change and ir remove save update;
+    project items has multiple section and packages and combinations ,
+    predefined project items as template can used : AC Station, Filter Plant , ...;
+
+
+power ranges for components:
+0 to 0.5kw,
+0.5 to 1.5kw,
+1.5 to 3kw,
+3to 4.5kw,
+4.5 to 7.5 kw,
+7.5 to 10 kw,
+10 to 15kw,
+15 to 20 kw,
+20 to 25kw,
+25 to 35kw,
+35 to 45kw,
+45 to 60kw,
+60 to 75kw,
+75 to 95kw,
+95 to 120kw,
+120 to 150kw,
+150 to 220 kw,
+220 to 300kw,
+300 to 400kw;
+for contactors , breakers , overload , fuse and vfd , soft starter:
+vfd , soft starter up to 150kw ;
+
+;;
+{{
+project item ac station single soft starter :
+selection: soft start using: soft starter Or , VFD;
+
+components for 3 phase motors:
+motor name , motor number range 3 , motor power range 55kw , contactor number range 2, breaker number range 2;
+1-1- Fan feed. , def 2 , def 22kw , def 2 , def 1;
+1-2 Fan return. ,  def 2 , def 30kw , def 2,1;
+
+1-3: ARF and Dust Collectors:
+  1-3-1: input number of rotary filters in range 3 def =2 as its packages count;
+1-3-2: package for each rotary filter that:
+   1-3-2-1 : two dust fan 3k3w centrifuge : each has single contactor + breaker ;
+   1-3-2-2: one mechanism motor 0.25 kw : single contactor + breaker ;
+   1-3-2-3: one rotatory motor 1 kw with single breaker + contactor;
+1-3-: its calculations its components as package * arf number ;
+;;
+
+1-4 pump water motor , def 30 kw , def 1motor , def 2 contactor, def 1 breaker ;
+;;
+
+2-actuators:
+actuator name , numbers in range 6 , spec ;
+2-1 damper fresh : def 2 , def 24v:
+2-2 damper exhaust , def 2 , 24vdc:
+2-3 damper return , def 2 , 24vdc:
+2-4 steam valve , def 1 , 24vdc:
+;;
+
+3-sensors :
+sensor name , sensor number in range 6 , spec;
+3-1 temprature , def 2 , def analog 4 20ma:
+3-2 humidity , def 2 , def analog 4 20ma:
+3-3 micro switch , def 5, digital on off:
+optional:
+4-1 inverter vfd or soft starter : according to selection of top that use it, size of largest motor used def 30kw , number 1 , contactor 1 ,  breaker 1 ;
+4-3 hmi , def 1 , def 7 inch؛
+4-4 سنسور تشخیص حرارت داخل تابلو پیشفرض صفر؛
+... all other components as:
+control phase and  breaker and contactor and relays plc and overliads and fuses and ground and...;
+emergency system and btn....;
+signal lamp and its....;
+io modules for analog and or digital input outputs;
+relays for each contactor and others...;
+psu to powering plc and modules and ....;
+memory and io and comunicate and plc relays and safety needs all must added to it;
+calculation contactors ampere and specify depends on its motor power and other factors , 
+each contactor has its relay plc;
+determine input outputs IO , digital and analog;
+finding its safety components and needed components to work properly;
+psu , connection, terminal , fuse , breaker , switch , emergency, temrature switch , auto breaker , control phase, voltage controls , grounding , lamps, button,....;
+rail , cabinet , container, cable , wire , tag , terminal, connection, screw , label ,....;
+din rail , wiring power , signal , analog coaxial, digital pair , shield if needed , connection and contain and duct and signal lamp and ....;;
+
+template ended;;
+}}
+
+
+./index.phpas start and main ;
+./dbc.php database config mysql: esmartis_plc, esmartis_user , esmartis1364;
+./dbi.php one time table install defaults injector ;
+
+{
+./bom.php very rich and accurate standard components list after calculation very precise and with its standards don't attemp cost here and ever;
+}
+;;
+
+{
+./scenario.php for implementing scenario;
+./code.php for code suggestions and offering to use for that scenarion with that components;
+;;
+for starting of motor power> 10kw : 
+contactor connect to soft starter device
+if vfd as soft starter device:
+run motor to 90 percent 
+else if using soft starter : soft starter run motor 
+at 90 percent open contactor
+then close contactor motor to grid
+then 30 sec delay
+
+controling scenario also codes:
+return air = saloon air as saloon temperature as st and saloon humidity as sh;
+exhaust air = exhaust damper percentage * return air *( edeff def 1); 
+remain air = percentage of airflow of return air that not exhausted;
+remain percentage = 1 - exhaust percentage;
+remain percentage and exhaust percentage control by is damper percentage;
+exhaust damper for exhaust;
+fresh damper for intake fresh outdoor air;
+cycle damper to remaining air through it;
+system just calc exhaust damper;
+fresh damper = exhaust damper + pressure correction factor def 0;
+cycle air :
+if heater valve open:
+  cycle= remain air + heating constant wet bulb ;
+else : 
+  cycle = remain air;
+outdoor air temp as ot ,and humidity as oh ;
+
+mixing air =   using its hvac approach of mixing airs;
+feed air : if pump is off:
+  feed=mixed 
+else:
+  feed= mixed air condtant wet bulb cooling as  psychometric evaporative humidify up to 85% humidity;
+algorithm for scenario and code:
+feed = fresh percentage + cycle percentage;
+fresh percentage= exhaust percentage;
+cycle percentage = 100 - fresh percentage;
+cycle can heat if need;
+feed can humidify if need;
+algorithm ended;;
+;;
+}
+
+
+{
+user can add or edit templates at:
+./template.php for user can implement its template with combination of its selection and additions of standard usage as multiple of each or none and save for later use;}
+;;
+
+{{
+template 2:
+.ii.template for: filter plant:
+first get filter rooms number def 3:
+name , spec , number per room , contact per number;
+components = package of room * room numbers;
+for each filter room it has these pack:
+main fan ,in range 120kw def 75kw, def 1 , 2;
+filter disk motor ,1kw , 1 , 1;
+rotary filter motor ,1kw,1,1;
+mechanism motor , 0.3kw, 1 ,1;
+dust collector fan ,in range 7.5kw def 5kw,2,1;
+switch , doors conditions ,1;
+package ended;
+optional :hmi, pressure sensors ,...;
+emergency + phase control ++ other needs of safety components + instruments +...;
+؛؛
+template ended;;
+;;
+}}
+
+{
+./layout.php
+layout :
+it has grid of 3d component in 2d board
+each block height as bh = 20cm
+each block width as be = 16 cm
+each component has :
+width , height , tag;
+each  component except relays has 2cm margin left and right , 
+relays has no margins,
+vfd inventer w = 40 cm , h = 40cm , margin = 5cm; 
+also soft starter : h= 20 , w= 40;
+main breaker w = 20 , h= 20;
+single phase breaker has w = 4 , h= 10;
+relays : width = 2cm, height= 10cm , margin = 0;
+psu : w= 20 , h = 20 , m= 5;
+contactors : w= 16 , h= 20 , m= 4;
+so for other components estimating and finding its size according to its specific then creating its layout very standard and very care with help of colorizing; از بالا ابتدا خود پی ال سی و ... و ردیف پایین رله ها را کنار هم و بعدش کنتاکتورها و بقیه
+
+user can edit layout at layout.php:
+drag and drop , move , place , replace , edit , remove , add , connect , fix , float and.... very rich layout management system with color and tag and labels , can export to json and or scad and freecad and dxf with accurate and complete presentation and its standard placement very deep and accurate with correct decision and ensure to best reperesentation without any errors;;
+}
+
+{
+wiring.php to user can draw , edit , auto drawing , auto connecting its wiring diagram and wiring drawing and wiring tag and wiring label with its color and spec snd terminal and block and wire spec with rich visual and very hackable and user editable using touchscreen device,
+export to json , csv , text , scad , dx;;
+}

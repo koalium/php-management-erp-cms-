@@ -1,0 +1,24 @@
+
+
+[
+./index.php main file and start point;
+if user not signed in:
+  shown sign form ( ./sign.php inouts: username , password , btn sign ; limitations of 3 second between attempts, if username validation and password confirmation: if not admin : ./dashboard.php alif admin ./admin/admin.php ;
+]
+
+[
+./admin/ as DIR
+./admin.php : if user not admin : 404.html 
+./users.php lv of users with icon btn open remove permission , form ./user.php to add new or and edit save update remove user password and active and delete...;
+./userpermit.php form of permission list of selected user that can change save update default reset ...;
+./system.php lv of system log and issues and...
+]
+
+[
+permission list has 4 different value for each item : full 3 ,write 2 , read 1, none 0 ;
+as sample for user with id : 2 , username : reza :: admin  3,financial 2, budget 1, engineering 3, hr 2 , warehouse 1 , it 3 , production 3 , qc 1 , work order 3, transaction 1 , account 1, contact 2 , procurement 1 , message 1 , project 1 , tender 2 , proposal 3 , drawing 3, transport 0 , project item 2 , task 3 , project balooch 3 , tender rupture disk 3...
+permission can inherit from group or collabrations or and specific to job or person 
+permission can be for whole department or specific to one part of subject or objective : as it can read project but can full control on specific project and can write control on project items of projects...;
+]
+
+

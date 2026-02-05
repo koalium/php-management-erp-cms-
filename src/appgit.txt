@@ -1,0 +1,12 @@
+
+{ front end local run python single file frontend , using pyside6 , and monitor size get for better implementing its components;
+}
+{
+backend editable address to communicate to apim.php to handle request 
+dbc.php connect mysqldb 
+dbi.php create table if not exist
+config.php
+}
+{
+multiple user with multiple app on multiple machine , use app and same space on backend and its soecific related golder on local , app sync the server side and all of user devices to be update as the latest version with tracking and revers and version and user and... handling and control very accurate and developed enhance modern advance very capable features 
+{

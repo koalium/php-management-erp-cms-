@@ -1,0 +1,134 @@
+{
+(list view as lv):  header: title ، btn add new ; body: list ،selectable، scrollable ،paginated, icon btn :open ,edit, remove ,for each row ;  form to crud :  add , edit , save , removd , selected save update remove or cancel ;
+}
+
+{./  home and base folder
+style.css
+
+index.php start point and main file;
+header.php dynamic header creator;
+footer.php dynamic footer Creator;
+
+}
+
+{/auth/
+style.css
+sign.php : sign in form : input: username , password , btn signin , remember checkbox , 
+auth.php : validation then check it then if confirmed: if not admin: /dashboard/ 
+else if is admin : /admin/ 
+
+}
+,
+{/dashboard/
+style.css
+index.php : dashboard for 
+dashboards.pho lv of
+dashboard.php crud form to customize dashboard
+apim.php
+api.php
+}
+,
+{/admin/
+style.css
+index.php : admin panel for 
+users.php lv for
+user.php crud form
+}
+
+{/project/
+style.css
+index.php is dashboard project
+projects.php lv of
+project.php crud form
+branchs.php lv of
+branch.php crud form 
+apim.php api manager middleware
+api.php
+each project at creation has default branch "main" , 
+
+}
+
+{project/collaboration/
+style.css
+index.php
+collaborations.php lv of
+collaboration.php
+members.php lv of
+member.php
+apim.php
+api.php
+}
+
+{project/task/
+style.css
+index.php
+tasks php lv of 
+task.php crud form
+
+}
+
+{project/file/
+style.css
+index.php
+files.php lv of files
+file.php crud form : upload, update , ... add edit remove with version handler
+uploads.php
+upload.php
+update.php
+updates.php
+apim.php
+api.php
+}
+
+{project/workspace/
+style.php
+index.php
+explorer.php
+
+}
+
+{/projects/
+each project , when created , causing creation folder : {projectname}/main/ under /projects/ folder , 
+other branch creation add new folder in it
+at main branch project can add new file and folder and rules and every action and upload files are collected and stored here with version control and very rich and version handling with each act must described and tracking 
+each act han undo
+user always can back to any moment on history line of changes
+so
+every delete, update , edit: is soft change and can reversable and also its undo can undo by redo ....
+
+
+}
+{/history/
+style.css
+index.php
+histories.php
+history.php
+actions.php
+action.php
+undo.php
+redo.php
+change.pho
+transfer.php
+versions.php
+version.php
+admit.php
+apim.php
+api.php
+}
+
+{/db/
+json database , complete nosqldb as json files for handling and storing darabase for its needs and complete its handler and creating and editing and using through :
+config.php hold default configuration: 
+ other needs and very basic defaults...
+dbc.php to connect and communication with database , it can handle when col not found or table not found through straight and complex mechanism to handle that error and changing tables to error resilience and can scale and very rich system to use json and edit and error handling without any intrupt or break acquire for later developing and beyonds...
+
+
+dbi.php create needed table if not existed
+dbd.php insert ignore default data to its tables
+[
+id , username , password , is admin , active true , deleted false ,...; 1, admin , 654321 , t,t,f,....; 2,reza,321,1,..,..,...,; 3,user,123,0,....!;
+]
+dbu.php for changing darabase scheme and its structure as update it fir later developing and ...
+}
+
+

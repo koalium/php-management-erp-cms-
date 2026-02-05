@@ -1,0 +1,2065 @@
+با توجه به مشخصات سیستم تهویه مطبوع شما، یک الگوریتم کنترل پیشرفته پیشنهاد می‌شود:
+
+الگوریتم کنترل هوشمند دما و رطوبت
+
+۱- بخش‌های اصلی کنترل:
+
+· کنترل دما (۲۷°C هدف)
+· کنترل رطوبت (۶۸% هدف)
+· مدیریت انرژی (بهینه‌سازی مصرف)
+
+۲- سنسورهای مورد نیاز:
+
+· دمای بیرون
+· دمای داخل سالن
+· رطوبت بیرون
+· رطوبت داخل سالن
+
+۳- الگوریتم کنترل فصلی:
+
+حالت تابستان (دمای بیرون > ۳۰°C):
+
+```
+۱- فعال‌سازی خنک‌کاری تبخیری:
+   • کنترل پمپ آب بر اساس اختلاف دما و رطوبت
+   • تنظیم اینورتر پمپ (۰-۱۰۰%) مطابق نیاز
+
+۲- مدیریت هوای تازه:
+   • کاهش دمپر هوای تازه در ساعت اوج گرمای روز
+   • افزایش تدریجی در صبح/عصر
+
+۳- کنترل فن‌ها:
+   • افزایش تدریجی سرعت فن برگشت
+   • هماهنگی فن رفت و برگشت
+```
+
+حالت زمستان (دمای بیرون < ۱۵°C):
+
+```
+۱- فعال‌سازی گرمایش:
+   • کنترل شیر بخار بر اساس اختلاف دما
+   • پله‌ای کردن بازشدن شیر
+
+۲- مدیریت رطوبت:
+   • فعال‌سازی پمپ آب برای رطوبت‌زنی
+   • تنظیم بر اساس رطوبت خارج
+
+۳- بهینه‌سازی هوای تازه:
+   • کاهش دمپر اگزاست برای حفظ گرمای داخلی
+```
+
+۴- الگوریتم PID برای کنترل دقیق:
+
+کنترل دما:
+
+```python
+# شبه کد کنترل دما
+error_temp = temp_setpoint - temp_actual
+P_temp = Kp_temp * error_temp
+I_temp += Ki_temp * error_temp * dt
+D_temp = Kd_temp * (error_temp - prev_error_temp) / dt
+
+output_temp = P_temp + I_temp + D_temp
+```
+
+کنترل رطوبت:
+
+```python
+# شبه کد کنترل رطوبت
+error_humidity = humidity_setpoint - humidity_actual
+P_humidity = Kp_humidity * error_humidity
+I_humidity += Ki_humidity * error_humidity * dt
+
+output_humidity = P_humidity + I_humidity
+```
+
+۵- نقشه کنترل تجهیزات:
+
+تجهیز پارامتر کنترل محدوده
+فن رفت اینورتر ۳۰-۱۰۰%
+فن برگشت اینورتر ۳۰-۱۰۰%
+پمپ آب اینورتر ۰-۱۰۰%
+دمپر هوای تازه موقعیت ۰-۱۰۰%
+دمپر اگزاست موقعیت ۰-۱۰۰%
+دمپر سیکل موقعیت ۰-۱۰۰%
+شیر بخار موقعیت ۰-۱۰۰%
+
+۶- منطق تصمیم‌گیری:
+
+```
+اگر (دمای داخل > ۲۸°C) و (رطوبت داخل < ۷۰%):
+   افزایش سرعت پمپ آب
+   افزایش سرعت فن‌ها
+   تنظیم دمپر سیکل به ۵۰%
+
+اگر (دمای داخل < ۲۶°C) و (رطوبت داخل > ۶۵%):
+   کاهش سرعت پمپ آب
+   فعال‌سازی گرمایش در صورت نیاز
+
+اگر (دمای بیرون > ۴۰°C):
+   کاهش دمپر هوای تازه به ۲۰%
+   افزایش دمپر سیکل به ۸۰%
+```
+
+۷- بهینه‌سازی انرژی:
+
+· ساعات اوج مصرف: کاهش موقت سرعت فن‌ها
+· شب‌ها: کاهش setpoint دما به ۲۵°C
+· تعطیلات: فعال‌سازی حالت standby
+
+۸- حفاظت‌ها و ایمنی:
+
+· قطع خودکار در صورت خرابی سنسورها
+· محدودیت حداکثر سرعت فن‌ها
+· جلوگیری از یخ‌زدگی در زمستان
+
+این الگوریتم قابلیت توسعه به سیستم SCADA و کنترل از راه دور را دارد. پیشنهاد می‌کنیم از PLC با قابلیت PID کنترل استفاده شود.
+
+
+با توجه به مشخصات سیستم تهویه مطبوع شما، یک الگوریتم کنترل پیشرفته پیشنهاد می‌شود:
+
+الگوریتم کنترل هوشمند دما و رطوبت
+
+۱- بخش‌های اصلی کنترل:
+
+· کنترل دما (۲۷°C هدف)
+· کنترل رطوبت (۶۸% هدف)
+· مدیریت انرژی (بهینه‌سازی مصرف)
+
+۲- سنسورهای مورد نیاز:
+
+· دمای بیرون
+· دمای داخل سالن
+· رطوبت بیرون
+· رطوبت داخل سالن
+
+۳- الگوریتم کنترل فصلی:
+
+حالت تابستان (دمای بیرون > ۳۰°C):
+
+```
+۱- فعال‌سازی خنک‌کاری تبخیری:
+   • کنترل پمپ آب بر اساس اختلاف دما و رطوبت
+   • تنظیم اینورتر پمپ (۰-۱۰۰%) مطابق نیاز
+
+۲- مدیریت هوای تازه:
+   • کاهش دمپر هوای تازه در ساعت اوج گرمای روز
+   • افزایش تدریجی در صبح/عصر
+
+۳- کنترل فن‌ها:
+   • افزایش تدریجی سرعت فن برگشت
+   • هماهنگی فن رفت و برگشت
+```
+
+حالت زمستان (دمای بیرون < ۱۵°C):
+
+```
+۱- فعال‌سازی گرمایش:
+   • کنترل شیر بخار بر اساس اختلاف دما
+   • پله‌ای کردن بازشدن شیر
+
+۲- مدیریت رطوبت:
+   • فعال‌سازی پمپ آب برای رطوبت‌زنی
+   • تنظیم بر اساس رطوبت خارج
+
+۳- بهینه‌سازی هوای تازه:
+   • کاهش دمپر اگزاست برای حفظ گرمای داخلی
+```
+
+۴- الگوریتم PID برای کنترل دقیق:
+
+کنترل دما:
+
+```python
+# شبه کد کنترل دما
+error_temp = temp_setpoint - temp_actual
+P_temp = Kp_temp * error_temp
+I_temp += Ki_temp * error_temp * dt
+D_temp = Kd_temp * (error_temp - prev_error_temp) / dt
+
+output_temp = P_temp + I_temp + D_temp
+```
+
+کنترل رطوبت:
+
+```python
+# شبه کد کنترل رطوبت
+error_humidity = humidity_setpoint - humidity_actual
+P_humidity = Kp_humidity * error_humidity
+I_humidity += Ki_humidity * error_humidity * dt
+
+output_humidity = P_humidity + I_humidity
+```
+
+۵- نقشه کنترل تجهیزات:
+
+تجهیز پارامتر کنترل محدوده
+فن رفت اینورتر ۳۰-۱۰۰%
+فن برگشت اینورتر ۳۰-۱۰۰%
+پمپ آب اینورتر ۰-۱۰۰%
+دمپر هوای تازه موقعیت ۰-۱۰۰%
+دمپر اگزاست موقعیت ۰-۱۰۰%
+دمپر سیکل موقعیت ۰-۱۰۰%
+شیر بخار موقعیت ۰-۱۰۰%
+
+۶- منطق تصمیم‌گیری:
+
+```
+اگر (دمای داخل > ۲۸°C) و (رطوبت داخل < ۷۰%):
+   افزایش سرعت پمپ آب
+   افزایش سرعت فن‌ها
+   تنظیم دمپر سیکل به ۵۰%
+
+اگر (دمای داخل < ۲۶°C) و (رطوبت داخل > ۶۵%):
+   کاهش سرعت پمپ آب
+   فعال‌سازی گرمایش در صورت نیاز
+
+اگر (دمای بیرون > ۴۰°C):
+   کاهش دمپر هوای تازه به ۲۰%
+   افزایش دمپر سیکل به ۸۰%
+```
+
+۷- بهینه‌سازی انرژی:
+
+· ساعات اوج مصرف: کاهش موقت سرعت فن‌ها
+· شب‌ها: کاهش setpoint دما به ۲۵°C
+· تعطیلات: فعال‌سازی حالت standby
+
+۸- حفاظت‌ها و ایمنی:
+
+· قطع خودکار در صورت خرابی سنسورها
+· محدودیت حداکثر سرعت فن‌ها
+· جلوگیری از یخ‌زدگی در زمستان
+
+این الگوریتم قابلیت توسعه به سیستم SCADA و کنترل از راه دور را دارد. پیشنهاد می‌کنیم از PLC با قابلیت PID کنترل استفاده شود.
+
+با توجه به نیاز برای کنترل دقیق در شرایط مختلف آب و هوایی، الگوریتم پیشرفته‌تری ارائه می‌دهم:
+
+الگوریتم کنترل پیشرفته مبتنی بر شرایط بیرون
+
+۱- نقشه حرارتی بیرون (۰ تا ۵۰°C):
+
+```
+منطقه ۱: زمستان سرد (۰ تا ۱۰°C)
+منطقه ۲: بهار/پاییز (۱۰ تا ۲۰°C)  
+منطقه ۳: تابستان ملایم (۲۰ تا ۳۰°C)
+منطقه ۴: تابستان گرم (۳۰ تا ۴۰°C)
+منطقه ۵: تابستان بسیار گرم (۴۰ تا ۵۰°C)
+```
+
+۲- الگوریتم اصلی کنترل:
+
+```python
+class AdvancedHVACControl:
+    def __init__(self):
+        self.temp_setpoint = 27.0
+        self.humidity_setpoint = 68.0
+        self.season_mode = "auto"  # auto, summer, winter
+        
+    def calculate_control_outputs(self, temp_in, hum_in, temp_out, hum_out, hour, season):
+        # محاسبه خطاها
+        temp_error = self.temp_setpoint - temp_in
+        hum_error = self.humidity_setpoint - hum_in
+        
+        # تعیین حالت عملیاتی بر اساس دمای بیرون
+        operation_mode = self.determine_operation_mode(temp_out, hum_out, hour, season)
+        
+        # محاسبه خروجی‌های کنترل
+        outputs = self.calculate_equipment_outputs(operation_mode, temp_error, hum_error, temp_out, hum_out)
+        
+        return outputs, operation_mode
+```
+
+۳- تعیین حالت عملیاتی:
+
+```python
+def determine_operation_mode(self, temp_out, hum_out, hour, season):
+    if temp_out <= 10:  # زمستان سرد
+        return "winter_heating"
+    elif temp_out <= 20:  # بهار/پاییز
+        if hum_out < 60:
+            return "spring_ventilation"
+        else:
+            return "spring_dehumidification"
+    elif temp_out <= 30:  # تابستان ملایم
+        if hour >= 6 and hour <= 18:  # روز
+            return "summer_mild_cooling"
+        else:  # شب
+            return "night_free_cooling"
+    elif temp_out <= 40:  # تابستان گرم
+        return "summer_active_cooling"
+    else:  # تابستان بسیار گرم
+        return "summer_extreme_cooling"
+```
+
+۴- الگوریتم‌های اختصاصی برای هر حالت:
+
+حالت ۱: زمستان سرد (۰-۱۰°C بیرون)
+
+```
+کنترل اولویت: گرمایش + رطوبت‌زنی
+• شیر بخار: PID کنترل بر اساس دمای داخل
+• پمپ آب: فعال برای رطوبت‌زنی (PID کنترل رطوبت)
+• دمپر هوای تازه: ۱۰-۳۰% (حداقل تهویه)
+• دمپر سیکل: ۷۰-۹۰% (حداکثر بازیابی حرارت)
+• فن‌ها: سرعت متوسط (۵۰-۷۰%)
+```
+
+حالت ۲: بهار/پاییز (۱۰-۲۰°C بیرون)
+
+```
+کنترل اولویت: تهویه + رطوبت‌زنی
+• دمپر هوای تازه: ۵۰-۸۰%
+• پمپ آب: فعال برای رطوبت‌زنی
+• شیر بخار: غیرفعال یا حداقل
+• فن‌ها: سرعت پایین (۴۰-۶۰%)
+```
+
+حالت ۳: تابستان ملایم (۲۰-۳۰°C بیرون)
+
+```
+کنترل اولویت: خنک‌کاری تبخیری
+• پمپ آب: فعال برای خنک‌کاری (PID کنترل دما)
+• دمپر هوای تازه: ۳۰-۶۰%
+• فن‌ها: سرعت متوسط (۶۰-۸۰%)
+• شیر بخار: غیرفعال
+```
+
+حالت ۴: تابستان گرم (۳۰-۴۰°C بیرون)
+
+```
+کنترل اولویت: خنک‌کاری شدید
+• پمپ آب: حداکثر فعالیت
+• دمپر هوای تازه: ۱۰-۲۰% (کاهش بار حرارتی)
+• دمپر سیکل: ۸۰-۹۰%
+• فن‌ها: سرعت بالا (۸۰-۹۵%)
+```
+
+حالت ۵: تابستان بسیار گرم (۴۰-۵۰°C بیرون)
+
+```
+کنترل اولویت: حفظ شرایط پایه
+• پمپ آب: حداکثر + چرخه‌ای برای جلوگیری از اشباع
+• دمپر هوای تازه: ۵-۱۰% (حداقل)
+• فن‌ها: حداکثر سرعت
+• امکان افزایش setpoint دما به ۲۸°C برای صرفه‌جویی
+```
+
+۵- کنترل‌کننده‌های PID پیشرفته:
+
+```python
+class AdaptivePID:
+    def __init__(self, kp, ki, kd, output_limits=(0, 100)):
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+        self.integral = 0
+        self.prev_error = 0
+        self.output_limits = output_limits
+        
+    def update(self, error, dt):
+        # محاسبه PID
+        proportional = self.kp * error
+        self.integral += self.ki * error * dt
+        derivative = self.kd * (error - self.prev_error) / dt
+        
+        # محدودیت انتگرال برای جلوگیری از Windup
+        self.integral = max(min(self.integral, self.output_limits[1]), self.output_limits[0])
+        
+        output = proportional + self.integral + derivative
+        output = max(min(output, self.output_limits[1]), self.output_limits[0])
+        
+        self.prev_error = error
+        return output
+
+# کنترل‌کننده‌های مختلف
+temp_pid = AdaptivePID(kp=2.0, ki=0.1, kd=0.5)
+humidity_pid = AdaptivePID(kp=1.5, ki=0.05, kd=0.2)
+```
+
+۶- ماتریس تصمیم‌گیری بر اساس دما و رطوبت بیرون:
+
+دمای بیرون رطوبت بیرون استراتژی کنترل
+۰-۱۰°C هر میزان گرمایش + رطوبت‌زنی
+۱۰-۲۰°C <۵۰% تهویه + رطوبت‌زنی
+۱۰-۲۰°C ۵۰-۷۰% تهویه متعادل
+۱۰-۲۰°C ۷۰% کاهش تهویه + رطوبت‌زنی
+۲۰-۳۰°C <۴۰% خنک‌کاری تبخیری حداکثر
+۲۰-۳۰°C ۴۰-۶۰% خنک‌کاری متعادل
+۲۰-۳۰°C ۶۰% کاهش خنک‌کاری تبخیری
+۳۰-۵۰°C هر میزان حداقل تهویه + خنک‌کاری
+
+۷- الگوریتم مدیریت انرژی:
+
+```python
+def energy_management(self, hour, day_type, electricity_price):
+    # کاهش مصرف در ساعات پیک
+    if hour >= 12 and hour <= 16:  # پیک ظهر
+        self.apply_energy_saving_mode()
+    elif hour >= 18 and hour <= 22:  # پیک عصر
+        self.apply_energy_saving_mode()
+    
+    # تنظیمات ویژه آخر هفته
+    if day_type == "weekend":
+        self.adjust_for_weekend()
+        
+    # مدیریت بر اساس تعرفه برق
+    if electricity_price == "high":
+        self.reduce_power_consumption()
+
+def apply_energy_saving_mode(self):
+    # کاهش موقت setpoint در پیک مصرف
+    self.temp_setpoint = 28.0  # افزایش ۱ درجه
+    # کاهش سرعت فن‌ها به ۸۰%
+    # کاهش فعالیت پمپ آب
+```
+
+۸- کنترل رطوبت پیشرفته:
+
+```python
+def advanced_humidity_control(self, hum_in, hum_out, temp_in, temp_out):
+    # محاسبه نقطه شبنم
+    dew_point = self.calculate_dew_point(temp_in, hum_in)
+    
+    # جلوگیری از میعان
+    if dew_point > temp_in - 2:  # نزدیک به نقطه شبنم
+        self.reduce_humidification()
+        self.increase_ventilation()
+    
+    # کنترل رطوبت بر اساس دمای بیرون
+    if temp_out > 35 and hum_out < 30:
+        # بیرون گرم و خشک - رطوبت‌زنی حداکثر
+        self.max_humidification = True
+    elif temp_out < 15 and hum_out > 80:
+        # بیرون سرد و مرطوب - کاهش رطوبت‌زنی
+        self.min_humidification = True
+```
+
+۹- منطق فازی برای کنترل ترکیبی:
+
+```
+اگر (دمای داخل نزدیک به ۲۷°C) و (رطوبت داخل نزدیک به ۶۸%):
+   حالت "تعادل" - حفظ شرایط موجود
+
+اگر (دمای داخل بالا) و (رطوبت داخل پایین):
+   حالت "خنک‌کاری تبخیری" - افزایش پمپ آب
+
+اگر (دمای داخل پایین) و (رطوبت داخل بالا):
+   حالت "گرمایش + تهویه" - فعال کردن گرمایش و افزایش تهویه
+
+اگر (دمای بیرون مناسب) و (رطوبت بیرون مناسب):
+   حالت "تهویه طبیعی" - افزایش هوای تازه
+```
+
+۱۰- مانیتورینگ و گزارش‌دهی:
+
+· ثبت دائمی پارامترها
+· هشدار برای انحراف از setpoint
+· گزارش مصرف انرژی
+· پیش‌بینی شرایط بر اساس الگوی آب و هوا
+
+این الگوریتم قادر خواهد بود در تمام شرایط آب و هوایی از ۰ تا ۵۰ درجه، دما و رطوبت داخل را در محدوده مطلوب حفظ کند.
+
+
+با توجه به نیاز برای کنترل دقیق در شرایط مختلف آب و هوایی، الگوریتم پیشرفته‌تری ارائه می‌دهم:
+
+الگوریتم کنترل پیشرفته مبتنی بر شرایط بیرون
+
+۱- نقشه حرارتی بیرون (۰ تا ۵۰°C):
+
+```
+منطقه ۱: زمستان سرد (۰ تا ۱۰°C)
+منطقه ۲: بهار/پاییز (۱۰ تا ۲۰°C)  
+منطقه ۳: تابستان ملایم (۲۰ تا ۳۰°C)
+منطقه ۴: تابستان گرم (۳۰ تا ۴۰°C)
+منطقه ۵: تابستان بسیار گرم (۴۰ تا ۵۰°C)
+```
+
+۲- الگوریتم اصلی کنترل:
+
+```python
+class AdvancedHVACControl:
+    def __init__(self):
+        self.temp_setpoint = 27.0
+        self.humidity_setpoint = 68.0
+        self.season_mode = "auto"  # auto, summer, winter
+        
+    def calculate_control_outputs(self, temp_in, hum_in, temp_out, hum_out, hour, season):
+        # محاسبه خطاها
+        temp_error = self.temp_setpoint - temp_in
+        hum_error = self.humidity_setpoint - hum_in
+        
+        # تعیین حالت عملیاتی بر اساس دمای بیرون
+        operation_mode = self.determine_operation_mode(temp_out, hum_out, hour, season)
+        
+        # محاسبه خروجی‌های کنترل
+        outputs = self.calculate_equipment_outputs(operation_mode, temp_error, hum_error, temp_out, hum_out)
+        
+        return outputs, operation_mode
+```
+
+۳- تعیین حالت عملیاتی:
+
+```python
+def determine_operation_mode(self, temp_out, hum_out, hour, season):
+    if temp_out <= 10:  # زمستان سرد
+        return "winter_heating"
+    elif temp_out <= 20:  # بهار/پاییز
+        if hum_out < 60:
+            return "spring_ventilation"
+        else:
+            return "spring_dehumidification"
+    elif temp_out <= 30:  # تابستان ملایم
+        if hour >= 6 and hour <= 18:  # روز
+            return "summer_mild_cooling"
+        else:  # شب
+            return "night_free_cooling"
+    elif temp_out <= 40:  # تابستان گرم
+        return "summer_active_cooling"
+    else:  # تابستان بسیار گرم
+        return "summer_extreme_cooling"
+```
+
+۴- الگوریتم‌های اختصاصی برای هر حالت:
+
+حالت ۱: زمستان سرد (۰-۱۰°C بیرون)
+
+```
+کنترل اولویت: گرمایش + رطوبت‌زنی
+• شیر بخار: PID کنترل بر اساس دمای داخل
+• پمپ آب: فعال برای رطوبت‌زنی (PID کنترل رطوبت)
+• دمپر هوای تازه: ۱۰-۳۰% (حداقل تهویه)
+• دمپر سیکل: ۷۰-۹۰% (حداکثر بازیابی حرارت)
+• فن‌ها: سرعت متوسط (۵۰-۷۰%)
+```
+
+حالت ۲: بهار/پاییز (۱۰-۲۰°C بیرون)
+
+```
+کنترل اولویت: تهویه + رطوبت‌زنی
+• دمپر هوای تازه: ۵۰-۸۰%
+• پمپ آب: فعال برای رطوبت‌زنی
+• شیر بخار: غیرفعال یا حداقل
+• فن‌ها: سرعت پایین (۴۰-۶۰%)
+```
+
+حالت ۳: تابستان ملایم (۲۰-۳۰°C بیرون)
+
+```
+کنترل اولویت: خنک‌کاری تبخیری
+• پمپ آب: فعال برای خنک‌کاری (PID کنترل دما)
+• دمپر هوای تازه: ۳۰-۶۰%
+• فن‌ها: سرعت متوسط (۶۰-۸۰%)
+• شیر بخار: غیرفعال
+```
+
+حالت ۴: تابستان گرم (۳۰-۴۰°C بیرون)
+
+```
+کنترل اولویت: خنک‌کاری شدید
+• پمپ آب: حداکثر فعالیت
+• دمپر هوای تازه: ۱۰-۲۰% (کاهش بار حرارتی)
+• دمپر سیکل: ۸۰-۹۰%
+• فن‌ها: سرعت بالا (۸۰-۹۵%)
+```
+
+حالت ۵: تابستان بسیار گرم (۴۰-۵۰°C بیرون)
+
+```
+کنترل اولویت: حفظ شرایط پایه
+• پمپ آب: حداکثر + چرخه‌ای برای جلوگیری از اشباع
+• دمپر هوای تازه: ۵-۱۰% (حداقل)
+• فن‌ها: حداکثر سرعت
+• امکان افزایش setpoint دما به ۲۸°C برای صرفه‌جویی
+```
+
+۵- کنترل‌کننده‌های PID پیشرفته:
+
+```python
+class AdaptivePID:
+    def __init__(self, kp, ki, kd, output_limits=(0, 100)):
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+        self.integral = 0
+        self.prev_error = 0
+        self.output_limits = output_limits
+        
+    def update(self, error, dt):
+        # محاسبه PID
+        proportional = self.kp * error
+        self.integral += self.ki * error * dt
+        derivative = self.kd * (error - self.prev_error) / dt
+        
+        # محدودیت انتگرال برای جلوگیری از Windup
+        self.integral = max(min(self.integral, self.output_limits[1]), self.output_limits[0])
+        
+        output = proportional + self.integral + derivative
+        output = max(min(output, self.output_limits[1]), self.output_limits[0])
+        
+        self.prev_error = error
+        return output
+
+# کنترل‌کننده‌های مختلف
+temp_pid = AdaptivePID(kp=2.0, ki=0.1, kd=0.5)
+humidity_pid = AdaptivePID(kp=1.5, ki=0.05, kd=0.2)
+```
+
+۶- ماتریس تصمیم‌گیری بر اساس دما و رطوبت بیرون:
+
+دمای بیرون رطوبت بیرون استراتژی کنترل
+۰-۱۰°C هر میزان گرمایش + رطوبت‌زنی
+۱۰-۲۰°C <۵۰% تهویه + رطوبت‌زنی
+۱۰-۲۰°C ۵۰-۷۰% تهویه متعادل
+۱۰-۲۰°C ۷۰% کاهش تهویه + رطوبت‌زنی
+۲۰-۳۰°C <۴۰% خنک‌کاری تبخیری حداکثر
+۲۰-۳۰°C ۴۰-۶۰% خنک‌کاری متعادل
+۲۰-۳۰°C ۶۰% کاهش خنک‌کاری تبخیری
+۳۰-۵۰°C هر میزان حداقل تهویه + خنک‌کاری
+
+۷- الگوریتم مدیریت انرژی:
+
+```python
+def energy_management(self, hour, day_type, electricity_price):
+    # کاهش مصرف در ساعات پیک
+    if hour >= 12 and hour <= 16:  # پیک ظهر
+        self.apply_energy_saving_mode()
+    elif hour >= 18 and hour <= 22:  # پیک عصر
+        self.apply_energy_saving_mode()
+    
+    # تنظیمات ویژه آخر هفته
+    if day_type == "weekend":
+        self.adjust_for_weekend()
+        
+    # مدیریت بر اساس تعرفه برق
+    if electricity_price == "high":
+        self.reduce_power_consumption()
+
+def apply_energy_saving_mode(self):
+    # کاهش موقت setpoint در پیک مصرف
+    self.temp_setpoint = 28.0  # افزایش ۱ درجه
+    # کاهش سرعت فن‌ها به ۸۰%
+    # کاهش فعالیت پمپ آب
+```
+
+۸- کنترل رطوبت پیشرفته:
+
+```python
+def advanced_humidity_control(self, hum_in, hum_out, temp_in, temp_out):
+    # محاسبه نقطه شبنم
+    dew_point = self.calculate_dew_point(temp_in, hum_in)
+    
+    # جلوگیری از میعان
+    if dew_point > temp_in - 2:  # نزدیک به نقطه شبنم
+        self.reduce_humidification()
+        self.increase_ventilation()
+    
+    # کنترل رطوبت بر اساس دمای بیرون
+    if temp_out > 35 and hum_out < 30:
+        # بیرون گرم و خشک - رطوبت‌زنی حداکثر
+        self.max_humidification = True
+    elif temp_out < 15 and hum_out > 80:
+        # بیرون سرد و مرطوب - کاهش رطوبت‌زنی
+        self.min_humidification = True
+```
+
+۹- منطق فازی برای کنترل ترکیبی:
+
+```
+اگر (دمای داخل نزدیک به ۲۷°C) و (رطوبت داخل نزدیک به ۶۸%):
+   حالت "تعادل" - حفظ شرایط موجود
+
+اگر (دمای داخل بالا) و (رطوبت داخل پایین):
+   حالت "خنک‌کاری تبخیری" - افزایش پمپ آب
+
+اگر (دمای داخل پایین) و (رطوبت داخل بالا):
+   حالت "گرمایش + تهویه" - فعال کردن گرمایش و افزایش تهویه
+
+اگر (دمای بیرون مناسب) و (رطوبت بیرون مناسب):
+   حالت "تهویه طبیعی" - افزایش هوای تازه
+```
+
+۱۰- مانیتورینگ و گزارش‌دهی:
+
+· ثبت دائمی پارامترها
+· هشدار برای انحراف از setpoint
+· گزارش مصرف انرژی
+· پیش‌بینی شرایط بر اساس الگوی آب و هوا
+
+این الگوریتم قادر خواهد بود در تمام شرایط آب و هوایی از ۰ تا ۵۰ درجه، دما و رطوبت داخل را در محدوده مطلوب حفظ کند.
+
+
+
+۱۱- الگوریتم کنترل ساعتی و فصلی پیشرفته
+
+کنترل مبتنی بر ساعات روز:
+
+```python
+def time_based_control(self, current_hour, current_season):
+    # تنظیمات بر اساس ساعات روز
+    if 6 <= current_hour <= 9:  # صبح زود
+        self.morning_startup_sequence()
+    elif 9 <= current_hour <= 12:  # قبل از ظهر
+        self.mid_morning_operation()
+    elif 12 <= current_hour <= 15:  # اوج گرما
+        self.peak_heat_operation()
+    elif 15 <= current_hour <= 18:  # بعد از ظهر
+        self.afternoon_transition()
+    elif 18 <= current_hour <= 22:  # عصر
+        self.evening_operation()
+    else:  # شب
+        self.night_operation()
+```
+
+۱۲- سکانس راه‌اندازی صبحگاهی:
+
+```python
+def morning_startup_sequence(self):
+    # بررسی شرایط شب گذشته
+    overnight_temp_drop = self.temp_setpoint - self.temp_in
+    overnight_humidity_drop = self.humidity_setpoint - self.humidity_in
+    
+    if overnight_temp_drop > 5:  # سرمای شدید شب
+        # راه‌اندازی تدریجی با اولویت گرمایش
+        self.steam_valve = self.calculate_steam_requirement(overnight_temp_drop)
+        self.return_fan_speed = 60  # شروع با سرعت متوسط
+        self.supply_fan_speed = 55
+        self.fresh_air_damper = 20  # حداقل هوای تازه
+    else:
+        # راه‌اندازی نرمال
+        self.gradual_startup()
+```
+
+۱۳- الگوریتم مدیریت پیک مصرف:
+
+```python
+def peak_demand_management(self, current_temp, current_humidity, grid_status):
+    peak_hours = [12, 13, 14, 19, 20, 21]  # ساعات پیک
+    
+    if current_hour in peak_hours:
+        # استراتژی‌های کاهش مصرف در پیک
+        if abs(current_temp - self.temp_setpoint) <= 1:
+            # افزایش موقت setpoint دما
+            self.temp_setpoint += 0.5
+            self.fan_speed_reduction(15)  # کاهش ۱۵% سرعت فن‎ها
+            self.pump_cycling_mode()  # حالت چرخه‌ای پمپ
+        
+        if grid_status == "critical":
+            # شرایط اضطراری - کاهش بیشتر مصرف
+            self.emergency_power_saving()
+```
+
+۱۴- کنترل پیش‌بینانه (Predictive Control):
+
+```python
+class PredictiveController:
+    def __init__(self):
+        self.weather_forecast = []
+        self.historical_data = []
+        
+    def load_weather_forecast(self, forecast_data):
+        # بارگذاری پیش‌بینی آب و هوا برای ۲۴ ساعت آینده
+        self.weather_forecast = forecast_data
+        
+    def predictive_control(self):
+        # تحلیل پیش‌بینی برای بهینه‌سازی
+        next_6h_temp = [hour['temp'] for hour in self.weather_forecast[:6]]
+        next_6h_humidity = [hour['humidity'] for hour in self.weather_forecast[:6]]
+        
+        # پیش‌بینی نیازهای آینده
+        cooling_need = self.predict_cooling_demand(next_6h_temp)
+        humidification_need = self.predict_humidification_demand(next_6h_humidity)
+        
+        # تنظیم پیش‌دستانه تجهیزات
+        self.anticipatory_equipment_adjustment(cooling_need, humidification_need)
+```
+
+۱۵- الگوریتم مدیریت گذرا (Transient Management):
+
+```python
+def transient_management(self, temp_change_rate, humidity_change_rate):
+    # مدیریت شرایط گذرا برای جلوگیری از نوسانات شدید
+    
+    # اگر تغییر دما خیلی سریع است
+    if abs(temp_change_rate) > 0.5:  # °C per minute
+        if temp_change_rate > 0:  # گرمایش سریع
+            self.reduce_heating_gradually()
+            self.increase_cooling_slightly()
+        else:  # سرمایش سریع
+            self.reduce_cooling_gradually()
+            self.increase_heating_slightly()
+    
+    # اگر تغییر رطوبت خیلی سریع است
+    if abs(humidity_change_rate) > 2:  # % per minute
+        self.adjust_humidification_rate(humidity_change_rate)
+```
+
+۱۶- ماتریس کنترل دقیق برای رطوبت‌های مختلف بیرون:
+
+دمای بیرون رطوبت بیرون استراتژی پمپ آب دمپر تازه دمپر سیکل
+۰-۱۰°C <۳۰% گرمایش + رطوبت‌زنی شدید ۸۰-۱۰۰% ۱۰% ۹۰%
+۰-۱۰°C ۳۰-۶۰% گرمایش + رطوبت‌زنی متوسط ۶۰-۸۰% ۱۵% ۸۵%
+۰-۱۰°C ۶۰-۸۰% گرمایش + رطوبت‌زنی کم ۴۰-۶۰% ۲۰% ۸۰%
+۱۰-۲۰°C <۳۰% تهویه + رطوبت‌زنی ۷۰-۹۰% ۵۰% ۵۰%
+۱۰-۲۰°C ۳۰-۶۰% تهویه متعادل ۵۰-７۰% ۶۰% ۴۰%
+۱۰-۲۰°C ۸۰% کاهش تهویه + رطوبت‌زنی ۳۰-۵۰% ۳۰% ۷۰%
+۲۰-۳۰°C <۳۰% خنک‌کاری تبخیری حداکثر ۱۰۰% ۴۰% ۶۰%
+۲۰-۳۰°C ۳۰-۵۰% خنک‌کاری تبخیری بهینه ۸۰% ۵۰% ۵۰%
+۲۰-۳۰°C ۵۰-۷۰% خنک‌کاری محدود ۶۰% ۶۰% ۴۰%
+۳۰-۴۰°C <۲۰% خنک‌کاری شدید + رطوبت‌زنی ۱۰۰% ۱۵% ۸۵%
+۳۰-۴۰°C ۲۰-۴۰% خنک‌کاری متوسط ۸۰% ۲۰% ۸۰%
+۴۰-۵۰°C هر میزان حالت بقا ۶۰%* ۱۰% ۹۰%
+
+*پمپ آب در حالت چرخه‌ای برای جلوگیری از اشباع
+
+۱۷- الگوریتم بهینه‌سازی مصرف آب:
+
+```python
+def water_usage_optimization(self, current_humidity, water_availability):
+    # بهینه‌سازی مصرف آب در شرایط کم‌آبی
+    if water_availability == "low":
+        self.water_conservation_mode = True
+        
+    if self.water_conservation_mode:
+        # کاهش مصرف آب با حفظ رطوبت قابل قبول
+        if current_humidity >= 65:  # نزدیک به setpoint
+            self.pump_speed = max(self.pump_speed * 0.7, 30)  # کاهش سرعت پمپ
+            self.pump_cycle_interval = 300  # چرخه ۵ دقیقه‌ای
+        
+    # بازیابی آب از هوای برگشت در صورت امکان
+    if self.temp_out < 10 and self.humidity_in > 75:
+        self.activate_condensate_recovery()
+```
+
+۱۸- کنترل مقاوم (Robust Control) برای شرایط غیرعادی:
+
+```python
+def robust_control_system(self, sensor_failures, equipment_failures):
+    # عملکرد در شرایط خرابی تجهیزات
+    if "temp_sensor" in sensor_failures:
+        self.estimate_temperature_based_on_other_sensors()
+        
+    if "supply_fan" in equipment_failures:
+        # استفاده از فن باقیمانده با حداکثر کارایی
+        self.operate_with_single_fan()
+        
+    if "water_pump" in equipment_failures:
+        # فعال‌سازی حالت خشک (Dry Mode)
+        self.activate_dry_operation_mode()
+```
+
+۱۹- الگوریتم یادگیری و تطبیق (Learning & Adaptation):
+
+```python
+class LearningController:
+    def __init__(self):
+        self.performance_history = []
+        self.optimal_settings = {}
+        
+    def record_performance(self, timestamp, conditions, settings, performance):
+        # ثبت عملکرد سیستم در شرایط مختلف
+        self.performance_history.append({
+            'timestamp': timestamp,
+            'conditions': conditions,
+            'settings': settings,
+            'performance': performance
+        })
+        
+    def analyze_and_optimize(self):
+        # تحلیل داده‌های تاریخی برای یافتن تنظیمات بهینه
+        best_performance = max(self.performance_history, 
+                             key=lambda x: x['performance'])
+        
+        # به روزرسانی تنظیمات بهینه
+        self.optimal_settings = best_performance['settings']
+        
+    def apply_learned_settings(self, current_conditions):
+        # اعمال تنظیمات بهینه برای شرایط مشابه
+        similar_conditions = self.find_similar_conditions(current_conditions)
+        if similar_conditions:
+            self.apply_settings(similar_conditions['optimal_settings'])
+```
+
+۲۰- سیستم هشدار و تشخیص انحراف:
+
+```python
+def advanced_alert_system(self):
+    # هشدار برای انحراف از setpoint
+    temp_deviation = abs(self.temp_in - self.temp_setpoint)
+    humidity_deviation = abs(self.humidity_in - self.humidity_setpoint)
+    
+    if temp_deviation > 2:  # انحراف ۲ درجه‌ای
+        self.send_alert("Temperature deviation", temp_deviation)
+        self.activate_correction_sequence()
+        
+    if humidity_deviation > 10:  # انحراف ۱۰٪ رطوبت
+        self.send_alert("Humidity deviation", humidity_deviation)
+        self.activate_humidity_correction()
+    
+    # هشدار برای مصرف غیرعادی انرژی
+    if self.energy_consumption > self.normal_consumption * 1.3:
+        self.send_alert("High energy consumption")
+```
+
+۲۱- الگوریتم تعادل بار حرارتی:
+
+```python
+def heat_load_balancing(self, internal_heat_load, solar_heat_gain):
+    # محاسبه بار حرارتی کل
+    total_heat_load = (internal_heat_load + 
+                      solar_heat_gain + 
+                      self.calculate_infiltration_load() +
+                      self.calculate_equipment_heat())
+    
+    # تنظیم تجهیزات بر اساس بار حرارتی
+    if total_heat_load > 0:  # بار سرمایشی
+        cooling_capacity_required = total_heat_load / self.system_cooling_capacity
+        self.adjust_cooling_equipment(cooling_capacity_required)
+    else:  # بار گرمایشی
+        heating_capacity_required = abs(total_heat_load) / self.system_heating_capacity
+        self.adjust_heating_equipment(heating_capacity_required)
+```
+
+۲۲- کنترل چندمتغیره پیشرفته:
+
+```python
+def multivariable_control(self):
+    # کنترل همزمان تمام متغیرها
+    control_matrix = [
+        # [Temp, Humidity, FreshAir, RecircAir, Pump, Steam]
+        [1.0, 0.3, 0.2, 0.8, 0.6, 0.1],  # حالت گرمایش
+        [0.8, 0.6, 0.5, 0.5, 0.9, 0.0],  # حالت خنک‌کاری
+        [0.5, 0.8, 0.7, 0.3, 0.7, 0.0],  # حالت رطوبت‌زنی
+        [0.6, 0.5, 0.9, 0.1, 0.4, 0.0]   # حالت تهویه
+    ]
+    
+    # انتخاب بهترین ترکیب کنترل
+    optimal_combination = self.select_optimal_combination(control_matrix)
+    self.apply_control_combination(optimal_combination)
+```
+
+این الگوریتم پیشرفته قادر خواهد بود با درنظرگیری تمام پارامترهای مؤثر، شرایط ایده‌ال داخل سالن را در گستره وسیعی از شرایط بیرونی حفظ کند و همزمان مصرف انرژی را بهینه نماید.
+
+
+
+الگوریتم جامع کنترل و مانیتورینگ سیستم تهویه مطبوع
+
+۱- سکانس راه‌اندازی و کنترل قدرت
+
+الف) الگوریتم تست تجهیزات (Pre-Start Check)
+
+```python
+class EquipmentTest:
+    def pre_start_check(self):
+        # تست سلامت سنسورها
+        sensor_status = self.test_sensors()
+        
+        # تست اینورترها
+        inverter_status = self.test_inverters()
+        
+        # تست کنتاکتورها
+        contactor_status = self.test_contactors()
+        
+        # تست شیر بخار
+        steam_valve_status = self.test_steam_valve()
+        
+        return all([sensor_status, inverter_status, 
+                   contactor_status, steam_valve_status])
+
+    def test_sensors(self):
+        sensors = ['temp_in', 'temp_out', 'hum_in', 'hum_out']
+        for sensor in sensors:
+            if not self.read_sensor(sensor).valid:
+                self.log_fault(f"Sensor {sensor} failure")
+                return False
+        return True
+
+    def test_inverters(self):
+        inverters = ['supply_fan_1', 'supply_fan_2', 
+                    'return_fan_1', 'return_fan_2', 'water_pump']
+        
+        for inv in inverters:
+            try:
+                response = self.can_bus.query(f"{inv}/status")
+                if response.ready:
+                    self.log_info(f"Inverter {inv} OK")
+                else:
+                    raise Exception(f"Inverter {inv} not ready")
+            except Exception as e:
+                self.log_fault(str(e))
+                return False
+        return True
+```
+
+ب) سکانس راه‌اندازی نرم (Soft Start Sequence)
+
+```python
+class SoftStartSequence:
+    def __init__(self):
+        self.startup_timers = {
+            'pre_purge': 30,      # 30 seconds
+            'fan_ramp_up': 60,    # 60 seconds
+            'pump_ramp_up': 45,   # 45 seconds
+            'system_stabilize': 120  # 2 minutes
+        }
+    
+    def execute_soft_start(self):
+        try:
+            # مرحله ۱: پری پورج - تهویه اولیه
+            self.pre_purge_sequence()
+            
+            # مرحله ۲: راه‌اندازی تدریجی فن‌ها
+            self.ramp_up_fans()
+            
+            # مرحله ۳: راه‌اندازی پمپ آب
+            self.ramp_up_water_pump()
+            
+            # مرحله ۴: پایدارسازی سیستم
+            self.system_stabilization()
+            
+            # مرحله ۵: انتقال به کنترل اتوماتیک
+            self.transition_to_auto()
+            
+        except Exception as e:
+            self.emergency_shutdown(str(e))
+    
+    def pre_purge_sequence(self):
+        """تهویه اولیه سالن قبل از راه‌اندازی"""
+        # باز کردن دمپرهای هوای تازه و اگزاست
+        self.set_damper_position('fresh_air', 100)
+        self.set_damper_position('exhaust_air', 100)
+        self.set_damper_position('recirc_air', 0)
+        
+        # راه‌اندازی فن‌ها با سرعت پایین
+        self.set_inverter_speed('supply_fan_1', 15)
+        self.set_inverter_speed('return_fan_1', 15)
+        
+        # انتظار برای پری پورج
+        self.delay(self.startup_timers['pre_purge'])
+        
+        # بستن تدریجی دمپرها
+        self.set_damper_position('fresh_air', 20)
+        self.set_damper_position('exhaust_air', 20)
+```
+
+۲- مدیریت اینورتر و کنتاکتور
+
+الف) الگوریتم کنترل اینورتر
+
+```python
+class InverterController:
+    def __init__(self):
+        self.inverter_params = {
+            'ramp_up_time': 30,    # 30 seconds
+            'ramp_down_time': 45,  # 45 seconds
+            'max_frequency': 50,   # Hz
+            'min_frequency': 15    # Hz
+        }
+    
+    def start_inverter_soft(self, inverter_name, target_speed):
+        """راه‌اندازی نرم اینورتر"""
+        try:
+            # فعال کردن اینورتر از طریق کنتاکتور
+            self.energize_contactor(f"{inverter_name}_contactor")
+            
+            # ارسال دستور راه‌اندازی از طریق CAN bus
+            can_message = {
+                'id': f'{inverter_name}_start',
+                'data': {
+                    'command': 'start',
+                    'acceleration_time': self.inverter_params['ramp_up_time'],
+                    'initial_freq': self.inverter_params['min_frequency']
+                }
+            }
+            self.can_bus.send(can_message)
+            
+            # افزایش تدریجی سرعت
+            self.ramp_frequency(inverter_name, target_speed)
+            
+            # تأیید وضعیت
+            status = self.verify_inverter_running(inverter_name)
+            return status
+            
+        except Exception as e:
+            self.log_fault(f"Inverter {inverter_name} start failed: {str(e)}")
+            return False
+    
+    def ramp_frequency(self, inverter_name, target_freq):
+        """افزایش تدریجی فرکانس اینورتر"""
+        current_freq = self.inverter_params['min_frequency']
+        step = 0.5  # Hz per step
+        
+        while current_freq < target_freq:
+            current_freq += step
+            self.set_inverter_frequency(inverter_name, current_freq)
+            self.delay(0.1)  # 100ms between steps
+```
+
+ب) مدیریت کنتاکتورها
+
+```python
+class ContactorManager:
+    def contactor_sequence(self, operation):
+        """مدیریت توالی کنتاکتورها"""
+        contactor_order = [
+            'main_contactor',
+            'control_circuit_contactor',
+            'fan_1_contactor', 
+            'fan_2_contactor',
+            'pump_contactor',
+            'steam_valve_contactor'
+        ]
+        
+        if operation == "start":
+            sequence = contactor_order
+        else:  # stop
+            sequence = reversed(contactor_order)
+        
+        for contactor in sequence:
+            try:
+                if operation == "start":
+                    self.energize_contactor(contactor)
+                else:
+                    self.deenergize_contactor(contactor)
+                
+                # تأیید وضعیت کنتاکتور
+                if not self.verify_contactor_status(contactor, operation):
+                    raise Exception(f"Contactor {contactor} {operation} failed")
+                
+                self.delay(1)  # تأخیر ۱ ثانیه بین کنتاکتورها
+                
+            except Exception as e:
+                self.log_fault(str(e))
+                return False
+        
+        return True
+```
+
+۳- سیستم عیب‌یابی خودکار (Auto-Diagnostic)
+
+الف) الگوریتم تشخیص عیب
+
+```python
+class AutoDiagnostic:
+    def __init__(self):
+        self.fault_log = []
+        self.performance_metrics = {}
+    
+    def continuous_monitoring(self):
+        """مانیتورینگ دائمی سیستم"""
+        while self.system_running:
+            # مانیتورینگ اینورترها
+            self.monitor_inverters()
+            
+            # مانیتورینگ کنتاکتورها
+            self.monitor_contactors()
+            
+            # مانیتورینگ سنسورها
+            self.monitor_sensors()
+            
+            # مانیتورینگ دمای تابلو
+            self.monitor_control_panel_temp()
+            
+            self.delay(5)  # چک هر ۵ ثانیه
+    
+    def monitor_inverters(self):
+        """مانیتورینگ وضعیت اینورترها"""
+        inverters = ['supply_fan_1', 'supply_fan_2', 
+                    'return_fan_1', 'return_fan_2', 'water_pump']
+        
+        for inv in inverters:
+            try:
+                # خواندن پارامترهای اینورتر از طریق CAN
+                status = self.can_bus.query(f"{inv}/status")
+                temp = self.can_bus.query(f"{inv}/temperature")
+                current = self.can_bus.query(f"{inv}/output_current")
+                freq = self.can_bus.query(f"{inv}/output_frequency")
+                
+                # تشخیص عیب
+                if temp > 80:  # دمای بالای اینورتر
+                    self.log_fault(f"Inverter {inv} overtemperature: {temp}°C")
+                    self.reduce_inverter_load(inv)
+                
+                if current > self.inverter_max_current(inv) * 1.2:
+                    self.log_fault(f"Inverter {inv} overcurrent: {current}A")
+                    self.protective_shutdown(inv)
+                    
+            except CANBusError as e:
+                self.log_fault(f"CAN communication error with {inv}: {str(e)}")
+```
+
+ب) سیستم تشخیص و بازیابی خطا
+
+```python
+class FaultRecoverySystem:
+    def handle_fault(self, fault_type, severity, component):
+        """مدیریت خطا و بازیابی خودکار"""
+        fault_response = {
+            'critical': self.critical_fault_response,
+            'high': self.high_severity_fault_response,
+            'medium': self.medium_severity_fault_response,
+            'low': self.low_severity_fault_response
+        }
+        
+        response_func = fault_response.get(severity, self.medium_severity_fault_response)
+        response_func(fault_type, component)
+    
+    def critical_fault_response(self, fault_type, component):
+        """پاسخ به خطاهای بحرانی"""
+        # خاموش کردن فوری سیستم
+        self.emergency_shutdown()
+        
+        # قطع کنتاکتورهای قدرت
+        self.open_all_power_contactors()
+        
+        # فعال کردن آلارم
+        self.activate_audible_alarm()
+        self.send_remote_alert(f"CRITICAL: {fault_type} on {component}")
+    
+    def high_severity_fault_response(self, fault_type, component):
+        """پاسخ به خطاهای با شدت بالا"""
+        # توقف تجهیزات مرتبط
+        self.stop_related_equipment(component)
+        
+        # تلاش برای راه‌اندازی تجهیزات پشتیبان
+        if self.has_backup(component):
+            self.switch_to_backup(component)
+        
+        # گزارش خطا
+        self.send_remote_alert(f"HIGH: {fault_type} on {component}")
+```
+
+۴- مانیتورینگ و حفاظت تابلو کنترل
+
+الف) مانیتورینگ تابلو کنترل
+
+```python
+class ControlPanelMonitor:
+    def __init__(self):
+        self.panel_limits = {
+            'max_temperature': 45,    # °C
+            'max_humidity': 80,       # %
+            'min_voltage': 380 * 0.9, # V
+            'max_voltage': 380 * 1.1  # V
+        }
+    
+    def monitor_control_panel(self):
+        """مانیتورینگ شرایط تابلو کنترل"""
+        # دمای تابلو
+        panel_temp = self.read_panel_temperature()
+        if panel_temp > self.panel_limits['max_temperature']:
+            self.activate_panel_cooling()
+            if panel_temp > 50:  # دمای خطرناک
+                self.initiate_graceful_shutdown()
+        
+        # رطوبت تابلو
+        panel_humidity = self.read_panel_humidity()
+        if panel_humidity > self.panel_limits['max_humidity']:
+            self.activate_panel_heating()  # برای کاهش رطوبت
+        
+        # ولتاژ تغذیه
+        supply_voltage = self.read_supply_voltage()
+        if supply_voltage < self.panel_limits['min_voltage']:
+            self.voltage_dip_protection()
+        elif supply_voltage > self.panel_limits['max_voltage']:
+            self.overvoltage_protection()
+```
+
+ب) سیستم خنک‌کاری تابلو
+
+```python
+def panel_cooling_management(self):
+    """مدیریت خنک‌کاری تابلو کنترل"""
+    temp = self.read_panel_temperature()
+    
+    if temp > 40:
+        # فعال کردن فن‌های خنک‌کاری تابلو
+        self.set_cooling_fan_speed(100)
+    elif temp > 35:
+        self.set_cooling_fan_speed(70)
+    elif temp > 30:
+        self.set_cooling_fan_speed(50)
+    else:
+        self.set_cooling_fan_speed(30)
+    
+    # اگر دمای تابلو به ۵۵ درجه رسید، اقدامات اضطراری
+    if temp > 55:
+        self.emergency_panel_cooling()
+```
+
+۵- ارتباطات CAN Bus
+
+الف) مدیریت ارتباطات CAN
+
+```python
+class CANBusManager:
+    def __init__(self):
+        self.can_nodes = {
+            'inverter_1': 0x100,
+            'inverter_2': 0x101,
+            'inverter_3': 0x102,
+            'sensor_hub': 0x200,
+            'contactor_controller': 0x300,
+            'hmi_panel': 0x400
+        }
+    
+    def initialize_can_network(self):
+        """اولیه‌سازی شبکه CAN"""
+        try:
+            # راه‌اندازی رابط CAN
+            self.can_bus.init(bitrate=500000)  # 500 kbps
+            
+            # پیکربندی فیلترهای CAN
+            self.configure_can_filters()
+            
+            # تست ارتباط با تمام نودها
+            for node_name, node_id in self.can_nodes.items():
+                if not self.ping_node(node_id):
+                    raise CANNodeError(f"CAN node {node_name} not responding")
+            
+            self.log_info("CAN network initialized successfully")
+            return True
+            
+        except Exception as e:
+            self.log_fault(f"CAN initialization failed: {str(e)}")
+            return False
+    
+    def send_control_command(self, node_id, command, data):
+        """ارسال دستور کنترل از طریق CAN"""
+        can_message = {
+            'id': node_id,
+            'extended': False,
+            'data': self.encode_control_data(command, data)
+        }
+        
+        try:
+            response = self.can_bus.send_and_wait(can_message, timeout=1000)
+            return self.decode_response(response)
+        except CANTimeoutError:
+            self.log_fault(f"CAN timeout for node {hex(node_id)}")
+            return None
+```
+
+ب) پروتکل ارتباطی سفارشی
+
+```python
+class CustomCANProtocol:
+    # تعریف پیام‌های CAN
+    MESSAGE_IDS = {
+        'INVERTER_CONTROL': 0x100,
+        'SENSOR_DATA': 0x200,
+        'CONTACTOR_STATUS': 0x300,
+        'FAULT_REPORT': 0x400,
+        'SYSTEM_STATUS': 0x500
+    }
+    
+    def pack_inverter_command(self, inverter_id, command, frequency):
+        """بسته‌بندی دستور اینورتر"""
+        data = bytearray(8)
+        data[0] = inverter_id
+        data[1] = command  # 1=start, 2=stop, 3=set_freq
+        data[2:4] = self.float_to_bytes(frequency)
+        data[4] = self.calculate_checksum(data[:4])
+        return data
+    
+    def unpack_sensor_data(self, can_data):
+        """آنپک کردن داده‌های سنسور"""
+        sensor_readings = {
+            'temperature_in': self.bytes_to_float(can_data[0:2]),
+            'temperature_out': self.bytes_to_float(can_data[2:4]),
+            'humidity_in': self.bytes_to_float(can_data[4:6]),
+            'humidity_out': self.bytes_to_float(can_data[6:8])
+        }
+        return sensor_readings
+```
+
+۶- الگوریتم اصلی کنترل Supervisor
+
+```python
+class HVACSupervisor:
+    def __init__(self):
+        self.equipment_test = EquipmentTest()
+        self.soft_start = SoftStartSequence()
+        self.inverter_ctrl = InverterController()
+        self.contactor_mgr = ContactorManager()
+        self.diagnostic = AutoDiagnostic()
+        self.panel_monitor = ControlPanelMonitor()
+        self.can_mgr = CANBusManager()
+        
+        self.system_state = "OFF"
+        self.operation_mode = "AUTO"
+    
+    def main_control_loop(self):
+        """حلقه اصلی کنترل سیستم"""
+        # راه‌اندازی اولیه
+        if not self.initialize_system():
+            return False
+        
+        # حلقه اصلی
+        while True:
+            try:
+                # مانیتورینگ وضعیت سیستم
+                self.monitor_system_health()
+                
+                # کنترل دما و رطوبت
+                if self.system_state == "RUNNING":
+                    self.climate_control_algorithm()
+                
+                # مدیریت انرژی
+                self.energy_management()
+                
+                # بروزرسانی HMI
+                self.update_hmi_display()
+                
+                self.delay(1)  # چرخه ۱ ثانیه
+                
+            except Exception as e:
+                self.handle_system_exception(e)
+    
+    def initialize_system(self):
+        """راه‌اندازی اولیه کامل سیستم"""
+        steps = [
+            ("CAN Bus Initialization", self.can_mgr.initialize_can_network),
+            ("Equipment Self-Test", self.equipment_test.pre_start_check),
+            ("Contactor Sequence", lambda: self.contactor_mgr.contactor_sequence("start")),
+            ("Soft Start", self.soft_start.execute_soft_start)
+        ]
+        
+        for step_name, step_func in steps:
+            try:
+                self.log_info(f"Executing: {step_name}")
+                if not step_func():
+                    raise SystemInitializationError(f"{step_name} failed")
+            except Exception as e:
+                self.log_fault(f"Initialization failed at {step_name}: {str(e)}")
+                return False
+        
+        self.system_state = "RUNNING"
+        self.log_info("System initialized and running")
+        return True
+```
+
+این الگوریتم جامع، تمام جنبه‌های کنترل سیستم تهویه مطبوع از جمله راه‌اندازی نرم، مدیریت اینورتر و کنتاکتور، عیب‌یابی خودکار، حفاظت از تابلو کنترل و ارتباطات CAN Bus را پوشش می‌دهد.
+
+SCADA Implementation for Siemens STEP7 (TIA Portal)
+
+۱- Data Block Structure (DB)
+
+Main Data Blocks Organization
+
+```pascal
+// DB1: System Status and Control
+STRUCT
+    // System Control
+    System_Start : BOOL;           // Start command
+    System_Stop : BOOL;            // Stop command
+    System_Reset : BOOL;           // Reset command
+    System_Auto : BOOL;            // Auto mode
+    System_Manual : BOOL;          // Manual mode
+    System_Status : INT;           // 0=Off, 1=Starting, 2=Running, 3=Fault
+    
+    // Temperature Control
+    Temp_Setpoint : REAL;          // 27.0 °C
+    Temp_Indoor : REAL;            // Actual indoor temp
+    Temp_Outdoor : REAL;           // Actual outdoor temp
+    Temp_Deviation : REAL;         // Deviation from setpoint
+    
+    // Humidity Control  
+    Humidity_Setpoint : REAL;      // 68.0 %
+    Humidity_Indoor : REAL;        // Actual indoor humidity
+    Humidity_Outdoor : REAL;       // Actual outdoor humidity
+    Humidity_Deviation : REAL;     // Deviation from setpoint
+    
+    // Equipment Status
+    Supply_Fan1_Running : BOOL;
+    Supply_Fan2_Running : BOOL;
+    Return_Fan1_Running : BOOL;
+    Return_Fan2_Running : BOOL;
+    Water_Pump_Running : BOOL;
+    Steam_Valve_Open : BOOL;
+END_STRUCT;
+
+// DB2: Inverter Control
+STRUCT
+    // Supply Fan 1 (18kW)
+    SF1_Speed_Setpoint : REAL;     // 0-100%
+    SF1_Speed_Actual : REAL;       // 0-100%
+    SF1_Current : REAL;            // Actual current
+    SF1_Frequency : REAL;          // Output frequency
+    SF1_Status : WORD;             // Inverter status word
+    SF1_Fault : BOOL;              // Fault status
+    
+    // Supply Fan 2 (18kW)
+    SF2_Speed_Setpoint : REAL;
+    SF2_Speed_Actual : REAL;
+    SF2_Current : REAL;
+    SF2_Frequency : REAL;
+    SF2_Status : WORD;
+    SF2_Fault : BOOL;
+    
+    // Return Fans and Water Pump similar structure...
+END_STRUCT;
+
+// DB3: Damper and Valve Control
+STRUCT
+    // Damper Positions (0-100%)
+    Damper_Fresh_Air : REAL;
+    Damper_Exhaust_Air : REAL;
+    Damper_Recirc_Air : REAL;
+    
+    // Valve Control
+    Steam_Valve_Position : REAL;   // 0-100%
+    Water_Pump_Speed : REAL;       // 0-100%
+    
+    // Actuator Status
+    Damper_Fresh_Status : BOOL;
+    Damper_Exhaust_Status : BOOL;
+    Damper_Recirc_Status : BOOL;
+    Steam_Valve_Status : BOOL;
+END_STRUCT;
+```
+
+۲- Function Blocks (FB)
+
+FB100: Main Control Logic
+
+```pascal
+FUNCTION_BLOCK FB100
+VAR_INPUT
+    Auto_Mode : BOOL;
+    Manual_Mode : BOOL;
+    Start_Cmd : BOOL;
+    Stop_Cmd : BOOL;
+    Reset_Cmd : BOOL;
+    Temp_Setpoint : REAL;
+    Humidity_Setpoint : REAL;
+END_VAR
+
+VAR_OUTPUT
+    System_Status : INT;
+    Operation_Mode : INT;
+    Control_Active : BOOL;
+END_VAR
+
+VAR
+    Start_Timer : TON;
+    Stop_Timer : TON;
+    Pre_Purge_Timer : TON;
+    System_State : INT;
+    Start_Sequence_Step : INT;
+END_VAR
+
+// Main Control Logic
+IF Start_Cmd AND NOT System_Status = 2 THEN
+    System_State := 1; // Starting
+    Start_Sequence();
+ELSIF Stop_Cmd AND System_Status = 2 THEN
+    System_State := 3; // Stopping
+    Stop_Sequence();
+ELSIF Reset_Cmd AND System_Status = 4 THEN
+    System_State := 0; // Reset
+    Reset_System();
+END_IF;
+
+// Update System Status
+System_Status := System_State;
+END_FUNCTION_BLOCK
+```
+
+FB101: Temperature PID Control
+
+```pascal
+FUNCTION_BLOCK FB101
+VAR_INPUT
+    Enable : BOOL;
+    Setpoint : REAL;
+    ProcessValue : REAL;
+    Manual_Value : REAL;
+    Manual_Mode : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    Output : REAL;
+    Control_Active : BOOL;
+    Error : BOOL;
+END_VAR
+
+VAR
+    PID_Controller : PID_Compact;
+    Error_Value : REAL;
+    Output_Limited : REAL;
+END_VAR
+
+// Error Calculation
+Error_Value := Setpoint - ProcessValue;
+
+// PID Control
+IF Enable AND NOT Manual_Mode THEN
+    PID_Controller.Setpoint := Setpoint;
+    PID_Controller.Input := ProcessValue;
+    PID_Controller.Cycle := T#1S;
+    PID_Controller(Enable := TRUE);
+    
+    Output := PID_Controller.Output;
+ELSE
+    Output := Manual_Value;
+    PID_Controller(Enable := FALSE);
+END_IF;
+
+// Output Limiting
+Output_Limited := LIMIT(0.0, Output, 100.0);
+Output := Output_Limited;
+
+Control_Active := Enable;
+END_FUNCTION_BLOCK
+```
+
+FB102: Inverter Control
+
+```pascal
+FUNCTION_BLOCK FB102
+VAR_INPUT
+    Inverter_Enable : BOOL;
+    Speed_Setpoint : REAL;
+    Manual_Speed : REAL;
+    Manual_Mode : BOOL;
+    Fault_Reset : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    Speed_Actual : REAL;
+    Current_Actual : REAL;
+    Frequency_Actual : REAL;
+    Running : BOOL;
+    Fault : BOOL;
+    Ready : BOOL;
+END_VAR
+
+VAR
+    Ramp_Up_Timer : TON;
+    Ramp_Down_Timer : TON;
+    Current_Speed : REAL;
+    Target_Speed : REAL;
+    Ramp_Time : TIME := T#30S;
+END_VAR
+
+// Speed Ramping
+IF Inverter_Enable THEN
+    Target_Speed := Speed_Setpoint;
+ELSE
+    Target_Speed := 0.0;
+END_IF;
+
+// Ramp Up/Down
+IF Target_Speed > Current_Speed THEN
+    Ramp_Up_Timer(IN := TRUE, PT := Ramp_Time);
+    Current_Speed := Target_Speed * (Ramp_Up_Timer.ET / Ramp_Time);
+ELSIF Target_Speed < Current_Speed THEN
+    Ramp_Down_Timer(IN := TRUE, PT := Ramp_Time);
+    Current_Speed := Target_Speed + (Current_Speed - Target_Speed) * (1 - (Ramp_Down_Timer.ET / Ramp_Time));
+END_IF;
+
+// Send to Inverter via PROFIBUS/PROFINET
+"DB_Inverter".Setpoint := Current_Speed;
+
+// Read Actual Values
+Speed_Actual := "DB_Inverter".Speed_Actual;
+Current_Actual := "DB_Inverter".Current;
+Frequency_Actual := "DB_Inverter".Frequency;
+Running := "DB_Inverter".Running;
+Fault := "DB_Inverter".Fault;
+Ready := "DB_Inverter".Ready;
+
+END_FUNCTION_BLOCK
+```
+
+۳- Organization Blocks (OB)
+
+OB1: Main Cyclic Program
+
+```pascal
+ORGANIZATION_BLOCK OB1
+VAR_TEMP
+    Cycle_Counter : INT;
+END_VAR
+
+BEGIN
+    // Read Inputs
+    Read_All_Sensors();
+    
+    // Main Control Logic
+    FB_Main_Control(
+        Auto_Mode := "HMI".Auto_Mode,
+        Manual_Mode := "HMI".Manual_Mode,
+        Start_Cmd := "HMI".Start_Cmd,
+        Stop_Cmd := "HMI".Stop_Cmd,
+        Reset_Cmd := "HMI".Reset_Cmd,
+        Temp_Setpoint := "HMI".Temp_Setpoint,
+        Humidity_Setpoint := "HMI".Humidity_Setpoint
+    );
+    
+    // Temperature Control
+    FB_Temp_Control(
+        Enable := FB_Main_Control.Control_Active,
+        Setpoint := "HMI".Temp_Setpoint,
+        ProcessValue := "DB_Sensors".Temp_Indoor,
+        Manual_Mode := "HMI".Manual_Mode
+    );
+    
+    // Humidity Control
+    FB_Humidity_Control(
+        Enable := FB_Main_Control.Control_Active,
+        Setpoint := "HMI".Humidity_Setpoint,
+        ProcessValue := "DB_Sensors".Humidity_Indoor,
+        Manual_Mode := "HMI".Manual_Mode
+    );
+    
+    // Equipment Control
+    Control_Fans();
+    Control_Dampers();
+    Control_Valves();
+    
+    // Write Outputs
+    Write_All_Outputs();
+    
+    // Update HMI Data
+    Update_HMI_Data();
+    
+    Cycle_Counter := Cycle_Counter + 1;
+END_ORGANIZATION_BLOCK
+```
+
+OB35: Cyclic Interrupt (100ms)
+
+```pascal
+ORGANIZATION_BLOCK OB35
+BEGIN
+    // Fast PID Control loops
+    FB_Fast_PID_Temp();
+    FB_Fast_PID_Humidity();
+    
+    // Safety Monitoring
+    Monitor_Safety_Circuits();
+    
+    // Communication with Inverters
+    Update_Inverter_Data();
+END_ORGANIZATION_BLOCK
+```
+
+OB82: Diagnostic Error Interrupt
+
+```pascal
+ORGANIZATION_BLOCK OB82
+VAR_TEMP
+    OB82_EV_CLASS : BYTE;
+    OB82_FLT_ID : BYTE;
+    OB82_PRIORITY : BYTE;
+    OB82_OB_NUMBR : BYTE;
+    OB82_RESERVED_1 : BYTE;
+    OB82_IO_FLAG : BYTE;
+    OB82_MDL_ADDR : WORD;
+    OB82_RESERVED_2 : WORD;
+    OB82_RACK_NUM : WORD;
+    OB82_RESERVED_3 : WORD;
+    OB82_RESERVED_4 : WORD;
+END_VAR
+
+BEGIN
+    // Log Diagnostic Error
+    "DB_Diagnostics".Last_Fault_Time := TIME_OF_DAY();
+    "DB_Diagnostics".Fault_Module_Address := OB82_MDL_ADDR;
+    "DB_Diagnostics".Fault_Type := OB82_FLT_ID;
+    
+    // Set System Fault
+    "DB_System".System_Status := 4; // Fault
+    
+    // Trigger Alarm
+    "HMI".Alarm_Active := TRUE;
+END_ORGANIZATION_BLOCK
+```
+
+۴- HMI Screen Implementation (WinCC)
+
+Main Overview Screen
+
+```pascal
+// Screen Properties
+OBJECT MainScreen
+{
+    // Temperature Display
+    OBJECT Temp_Indoor : I/O Field
+    {
+        Connection = "DB_Sensors".Temp_Indoor;
+        Format = "0.1 °C";
+        Limits = {0, 50};
+    }
+    
+    OBJECT Temp_Outdoor : I/O Field
+    {
+        Connection = "DB_Sensors".Temp_Outdoor;
+        Format = "0.1 °C";
+        Limits = {-20, 60};
+    }
+    
+    OBJECT Temp_Setpoint : I/O Field
+    {
+        Connection = "HMI".Temp_Setpoint;
+        Format = "0.1 °C";
+        Limits = {20, 30};
+    }
+    
+    // Humidity Display
+    OBJECT Humidity_Indoor : I/O Field
+    {
+        Connection = "DB_Sensors".Humidity_Indoor;
+        Format = "0.1 %";
+        Limits = {0, 100};
+    }
+    
+    // Equipment Status
+    OBJECT Supply_Fan1_Status : Status Display
+    {
+        Connection = "DB_Equipment".Supply_Fan1_Running;
+        OnColor = Green;
+        OffColor = Red;
+    }
+    
+    OBJECT Supply_Fan1_Speed : Bar Graph
+    {
+        Connection = "DB_Inverter".SF1_Speed_Actual;
+        Limits = {0, 100};
+        FillColor = Blue;
+    }
+    
+    // Control Buttons
+    OBJECT Btn_Start : Button
+    {
+        Text = "START";
+        Event = Press;
+        Action = SetBit("HMI".Start_Cmd);
+    }
+    
+    OBJECT Btn_Stop : Button
+    {
+        Text = "STOP";
+        Event = Press;
+        Action = SetBit("HMI".Stop_Cmd);
+    }
+    
+    OBJECT Btn_Auto : Button
+    {
+        Text = "AUTO";
+        Event = Press;
+        Action = SetBit("HMI".Auto_Mode);
+    }
+    
+    OBJECT Btn_Manual : Button
+    {
+        Text = "MANUAL";
+        Event = Press;
+        Action = SetBit("HMI".Manual_Mode);
+    }
+}
+```
+
+Trend Screen Configuration
+
+```pascal
+// Temperature Trend
+OBJECT Trend_Temperature : Trend View
+{
+    TimeRange = 86400; // 24 hours
+    
+    OBJECT TrendLine_Indoor : Trend Line
+    {
+        DataSource = "DB_Sensors".Temp_Indoor;
+        Color = Red;
+        LineWidth = 2;
+    }
+    
+    OBJECT TrendLine_Outdoor : Trend Line
+    {
+        DataSource = "DB_Sensors".Temp_Outdoor;
+        Color = Blue;
+        LineWidth = 2;
+    }
+    
+    OBJECT TrendLine_Setpoint : Trend Line
+    {
+        DataSource = "HMI".Temp_Setpoint;
+        Color = Green;
+        LineWidth = 1;
+        LineStyle = Dashed;
+    }
+}
+
+// Energy Consumption Trend
+OBJECT Trend_Energy : Trend View
+{
+    TimeRange = 604800; // 1 week
+    
+    OBJECT TrendLine_TotalPower : Trend Line
+    {
+        DataSource = "DB_Energy".Total_Power;
+        Color = Orange;
+        LineWidth = 2;
+    }
+}
+```
+
+Alarm Management
+
+```pascal
+// Alarm Configuration
+ALARM_CLASS HighPriority
+{
+    BackgroundColor = Red;
+    TextColor = White;
+    Flashing = TRUE;
+}
+
+ALARM_CLASS MediumPriority
+{
+    BackgroundColor = Yellow;
+    TextColor = Black;
+    Flashing = FALSE;
+}
+
+// Alarm Definitions
+ALARM 1 "High Temperature Alarm"
+{
+    Class = HighPriority;
+    Trigger = "DB_Sensors".Temp_Indoor > 30.0;
+    Message = "Indoor temperature exceeded 30°C";
+}
+
+ALARM 2 "Low Humidity Alarm"
+{
+    Class = MediumPriority;
+    Trigger = "DB_Sensors".Humidity_Indoor < 60.0;
+    Message = "Indoor humidity below 60%";
+}
+
+ALARM 3 "Fan Fault"
+{
+    Class = HighPriority;
+    Trigger = "DB_Inverter".SF1_Fault OR "DB_Inverter".SF2_Fault;
+    Message = "Supply fan inverter fault detected";
+}
+
+ALARM 4 "Filter Maintenance"
+{
+    Class = MediumPriority;
+    Trigger = "DB_Maintenance".Filter_Differential_Pressure > 250;
+    Message = "Air filter requires replacement";
+}
+```
+
+۵- Communication Configuration
+
+PROFIBUS DP Configuration
+
+```pascal
+// PROFIBUS Network Configuration
+PROFIBUS_MASTER "DP_Master"
+{
+    Station_Address = 2;
+    Baud_Rate = 1500;
+    
+    // Inverter Nodes
+    NODE "Inverter_SF1"
+    {
+        Address = 3;
+        Device = "ABB_ACS880";
+        Input_Length = 20;
+        Output_Length = 16;
+    }
+    
+    NODE "Inverter_SF2"
+    {
+        Address = 4;
+        Device = "ABB_ACS880";
+        Input_Length = 20;
+        Output_Length = 16;
+    }
+    
+    // I/O Modules
+    NODE "ET200M_1"
+    {
+        Address = 5;
+        Device = "IM153-2";
+        Input_Length = 32;
+        Output_Length = 32;
+    }
+}
+```
+
+PROFINET IO Configuration
+
+```pascal
+// PROFINET IO System
+PROFINET_IO_SYSTEM "PN_System"
+{
+    // HMI Connection
+    DEVICE "HMI_Panel"
+    {
+        IP_Address = "192.168.1.20";
+        Subnet_Mask = "255.255.255.0";
+    }
+    
+    // Remote I/O
+    DEVICE "ET200SP_Remote"
+    {
+        IP_Address = "192.168.1.30";
+        Device_Number = 1;
+    }
+}
+```
+
+۶- Safety Programming
+
+Emergency Stop Circuit
+
+```pascal
+FUNCTION_BLOCK FB200 // Safety Controller
+VAR_INPUT
+    Emergency_Stop : BOOL;     // From safety relay
+    Door_Open : BOOL;          // Cabinet door monitoring
+    Over_Temperature : BOOL;   // Panel temperature
+    Over_Current : BOOL;       // Motor protection
+END_VAR
+
+VAR_OUTPUT
+    Safe_State : BOOL;
+    Safety_Fault : BOOL;
+    Emergency_Stop_Active : BOOL;
+END_VAR
+
+VAR
+    Safety_Timer : TON;
+END_VAR
+
+// Emergency Stop Logic
+IF NOT Emergency_Stop OR Door_Open OR Over_Temperature OR Over_Current THEN
+    Safe_State := FALSE;
+    Emergency_Stop_Active := TRUE;
+    
+    // De-energize all power outputs
+    "DB_Outputs".Main_Contactor := FALSE;
+    "DB_Outputs".Fan_Contactors := FALSE;
+    "DB_Outputs".Pump_Contactor := FALSE;
+    
+    // Set system to safe state
+    "DB_System".System_Status := 5; // Emergency Stop
+ELSE
+    Safe_State := TRUE;
+    Emergency_Stop_Active := FALSE;
+END_IF;
+
+END_FUNCTION_BLOCK
+```
+
+This SCADA implementation for Siemens STEP7/TIA Portal provides a complete, professional-grade control system for the HVAC application with proper Siemens programming structure, HMI integration, and safety features.
+
+
+

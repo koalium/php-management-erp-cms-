@@ -1,0 +1,47 @@
+
+{
+root folder "/" :
+config.php
+dbc.php connect and communication to mysqldb: esmartis_api_db , user: esmartis_user , pass: esmartis1364;
+dbi.php create needed table if not existed;
+dbd.php insert ignore defaults;
+apim.php middleware api request and respond router,
+{
+./api/ folder: contain api files that used 
+signin.php
+logout.php
+repository.php
+file.php
+folder.php
+copy.php
+move.php
+remove.php
+create.php
+open.php
+upload.php
+download.php
+diffrence.php
+branch.php
+commit.php
+update.php
+sync.php
+push.php
+pull.php
+clone.php
+history.php
+undo.php
+goto.php
+version.php
+handler.php
+search.php
+connect.php
+register.php
+user.php
+permission.php
+collaboration.php
+restore.php
+
+}
+
+
+}

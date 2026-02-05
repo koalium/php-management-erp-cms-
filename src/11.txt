@@ -1,0 +1,25 @@
+php app
+mysqldb : esmartis_repo_db , user: esmartis_user , pass: esmartis1364
+implementing complete php base web app for teamwork on repository and its folder and files very advance version controlling with features and capability to use in local network very easy and complete to handle version controlling on file and folder and project and task with very rich frontend also advance commenting and tag system to track and solve issue with accurate and confident and everyone seen and use latest approved version of 
+index.php start point and main file
+header.php dynamic header creator 
+footer.php dynamic footer creator
+style.css colors and themes on dark blue gradient live interactive ui enhance modern ux
+
+repositories.php lv of
+repository.php crud form
+commits.php lv of
+commit.php crud form
+uploads.php lv of
+upload.php crud form and
+update.php
+push.php
+pull.pjp
+download.php
+clone.php
+branchs.php lv of
+branch.php crud form
+versions.php
+version.php
+folders.php
+folder.php

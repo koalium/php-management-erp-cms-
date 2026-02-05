@@ -1,0 +1,37 @@
+
+implementing php app;
+
+{
+./dbc.php is used just for connecting to mysqldb: esmartis_chat_db , user: esmartis_user , pass: esmartis1364; control and handle and comunicate through it to database just by its functions;
+at each of any other files never use sql code and sql codes just used in it ;
+}
+{
+dbi.php create tables if not exist
+}
+{
+index.php main file and start point
+header.php
+footer.php
+
+}
+{
+sign.php : 
+signin form and features ,
+signup form and features for registration,
+username len> 2 unique, 
+password len >2,
+auth.php backend for authentication 
+}
+{
+chats.php list view , selectable, scrollable, chat.php crud form , enhance ui integrated, touchscreen friendly responsive chat at
+chat.php: messaging interface,
+text , emoji, voice , sound and music files , video , documents, file sharing , image , picture , pdf and....
+size < 50mb 
+}
+{
+contacts.php list view, selectable, scrollable, icon btn delete , edit ,... for
+contact.php crud form for each user its contacts that related and .... 
+}
+{
+dark intractive theme and enhance ui ux with persian farsi default language 
+}

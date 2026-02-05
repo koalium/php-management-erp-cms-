@@ -1,0 +1,684 @@
+products.php list view to add or edit product template at its specific form for each product indipendent implement and develop and product.php as middle form..
+each product can edit update save add new remove as the template for adding to project as projectitem
+
+{{
+./projectitems.php: add new btn ,  list view of project item of selected project with edit remove open icon btn for each;
+
+
+/projectitem.php form add edit save update delete item to from projectitems of selected project from : 
+its the specific implementing of product and declare it under the project and can edit it gir the purpose
+}
+,
+{ each item btn search or calc attemp to find result and shown user and remaining inputs that user inserted , 
+btn save save that result according to redults added as new or updated as edited to that specific item of specific project
+btn cancel or back
+btn remove or delete
+}
+,
+{
+part 
+product adding multiple part together 
+product adding multiple product together
+
+product as parent product
+  multiple product as child product
+  multiple part child of product
+  user can create and developing any product by combination of part , 
+  user can developing product by  combination or other product
+part:
+ id , name , wh code , pr code , describe, note , attachments, drawing[] , procedure[] production , qc form , .....
+
+product : id , name , wh code , pr code , describe , info , attachments[] , notes[] , parts[] , sub products[] , production procedure [] , qc form[] , assembly [] , mto [] , bom [], mr[] , layout [] , documents [] , .....
+}
+,
+/product/template/ folder for these:
+{انواع تمپلیت های محصولات با جزییات جهت محاسبات و طراحی و....
+./rupturedisk.php as one product:
+with seperated independent button for search and save....
+{inputs: 
+{type as rit : selection : flat, def selected forward , reverse;}
+{size as ris : selection : 0.5 , 0.75 , 1 , 1.25 , 1.5 , 2 def selected , 2.5 , 3 , 4 , 5 , 6 , 8 , 10 , 12 , 14 , 16 , 18 , 20 , 22 , 24 , 28, ...: standard pipe sizes inch}
+{bursting :
+ { pressure as ribp: number bar def 4.4 }
+  { temperature as ribt : number degree def 45 }
+}
+{ count as ric : number step 1 , def 2}
+end of inputs;
+}
+{
+main layer material as mlm : selection : name from table material , def selected second one or ss316 ;
+}
+
+{
+searching table data:
+with help of ./search.php
+{
+
+
+
+try {
+    $pdo = new PDO(
+        "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
+        $username,
+        $password
+    );
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+    exit();
+}
+
+// Get search parameters
+$rt = $_POST['rt'] ?? 'flat';  // rupture type
+$rs = floatval($_POST['rs'] ?? 1);  // size
+$bp = floatval($_POST['bp'] ?? 5);  // burst pressure
+$bt = floatval($_POST['bt'] ?? 30);  // burst temperature
+$op = floatval($_POST['op'] ?? 4);  // operation pressure
+$ot = floatval($_POST['ot'] ?? 60); // operation temperature
+$lm = $_POST['lm'] ?? 's316';  // material
+$sm = $_POST['sm'] ?? 'ptfe';  // seal material
+
+// Initialize results array
+$results = [];
+
+try {
+    // First attempt: exact match on type, size, and burst pressure
+    $sql = "SELECT * FROM data WHERE type = :type AND size = :size AND bp = :bp";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':type' => $rt, ':size' => $rs, ':bp' => $bp]);
+    $frs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // If found, order by temperature difference
+    if (count($frs) > 0) {
+        usort($frs, function($a, $b) use ($bt) {
+            $diffA = abs($a['bt'] - $bt);
+            $diffB = abs($b['bt'] - $bt);
+            return $diffA <=> $diffB;
+        });
+        
+        $results = array_slice($frs, 0, 5);
+    } else {
+        // Second attempt: within size range and burst pressure range
+        $repeat = 0;
+        while (empty($results) && $repeat < 5) {
+            $pressureRange = $bp * (1 + $repeat * 0.1); // Increase range by 10% each iteration
+            
+            $sql = "SELECT * FROM data 
+                    WHERE type = :type 
+                    AND size BETWEEN :size_min AND :size_max
+                    AND bp BETWEEN :bp_min AND :bp_max
+                    ORDER BY ABS(bt - :bt) ASC
+                    LIMIT 5";
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':type' => $rt,
+                ':size_min' => $rs * (1 - $repeat * 0.05),
+                ':size_max' => $rs * (1 + $repeat * 0.05),
+                ':bp_min' => $bp * (1 - $repeat * 0.1),
+                ':bp_max' => $bp * (1 + $repeat * 0.1),
+                ':bt' => $bt
+            ]);
+            
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $repeat++;
+        }
+    }
+    
+    // Add additional information
+    foreach ($results as &$result) {
+        // Calculate match score
+        $sizeDiff = abs($result['size'] - $rs) / $rs;
+        $pressureDiff = abs($result['bp'] - $bp) / $bp;
+        $tempDiff = abs($result['bt'] - $bt) / ($bt > 0 ? $bt : 1);
+        
+        $matchScore = 100 - (($sizeDiff * 40) + ($pressureDiff * 40) + ($tempDiff * 20));
+        $result['match_score'] = max(0, min(100, round($matchScore)));
+        
+        // Safety margin
+        if ($result['rbp'] && is_numeric($result['rbp'])) {
+            $result['safety_margin'] = round((floatval($result['rbp']) / $bp - 1) * 100, 1);
+        }
+        
+        // Add holder information if requested
+        if (isset($_POST['hh']) && $_POST['hh'] == 'on') {
+            $holderSql = "SELECT * FROM size WHERE element = 'holder' AND type = :type AND nsize = :size";
+            $holderStmt = $pdo->prepare($holderSql);
+            $holderStmt->execute([':type' => $rt, ':size' => $rs]);
+            $holder = $holderStmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($holder) {
+                $result['holder'] = [
+                    'od' => $holder['od'],
+                    'id' => $holder['id'],
+                    'thickness' => $holder['thickness'],
+                    'len' => $holder['len'],
+                    'width' => $holder['width'],
+                    'height' => $holder['height']
+                ];
+            }
+        }
+    }
+    
+    echo json_encode([
+        'success' => true,
+        'count' => count($results),
+        'results' => $results,
+        'search_params' => [
+            'type' => $rt,
+            'size' => $rs,
+            'burst_pressure' => $bp,
+            'burst_temp' => $bt
+        ]
+    ]);
+    
+} catch (PDOException $e) {
+    echo json_encode([
+        'error' => 'Database error: ' . $e->getMessage(),
+        'success' => false
+    ]);
+}
+?>
+}
+
+where type eq irt and size eq ris :
+finding for closest rbp to ripb ascend bit close to bt;
+make some math trick and interpolation if needs for better finding 
+also then return results that interpolation to our results with them
+return results found rupture disk as frs;
+at min 4 different results;
+}
+{
+for each frs as mrs:
+layers : split by "_" to layer;
+for each layer : split by ":" to layer_material as llm , layer_thickness as llmt ;
+}
+{
+from table sizes :
+where element is rupture and rit is type and ris equal size  :
+return od as frlmsod;
+}
+{ 
+from table over_need:
+where ric >= az and ric <= ta  return kam as mrc , return dar as mrr;
+temc = ric * mrr
+if kam >= temc:
+ temc= kam
+return temc as testneedcount
+ tec = 2
+
+if type is reverse:
+  tec += 4
+elif type is forward:
+  tec += 3
+tec+= 1
+
+final need count as frnc = tec + ric + temc
+return frnc and use it for mto bom mr sheet plate and creation needs...
+}
+,
+{
+./pattern.php thats for pattern of drawing that cutting by Wirecutter cnc machine on rupture disk to tune its burst pressure and specific very accurate and for each purpose its can be redesign...
+}
+,
+{
+./layout.php make layout for cnc and i later describe it...
+
+}
+
+print and shown founded results in seperation with info and describe...;
+end of rupturedisk project item;
+}
+,
+{
+./burstsensor.php as project item
+bursting sensor that fit on rupture disk and bursting...
+size , count , type , transmission line ...
+}
+,
+{
+./holder.php :as one project item:
+with button calc or search that shown and btn save and btn back that do and close form independent;
+{ inputs:
+{size as his : selection ( range of standard pipe sizes) default 2 inch;}
+{type as hit : selection : reverse def , forward ,flat;}
+{material as him : selection : from table material neme ;}
+{ count as hic : number of it def 2 }
+}
+{from table size : element is holder : return od as hmod , id as hmid , thickness as hmtk}
+}
+print and shown distinguishable with interactive features its results ;
+end of holder project item;
+}
+}
+,
+{
+./rupturetests.php : list view of test of burst of rupture that
+./rupturetest.php as form to add new test or edit selected ... from to data table
+ it get layers seperated then combined them and can input up to 7 layers
+its design burst pressure as table bp
+burst temperature as table bt
+real burst pressure as table rbp
+forming height as table fh
+drawing as table drw
+ all of these inputs and any need to can complete and developing data table further...
+}
+
+
+
+print attractive colorfull output intractive , Rich visual feedbacks!
+{
+CREATE TABLE `if not exist data  (
+  `id` int(3) DEFAULT NULL,
+  `type` varchar(7) DEFAULT NULL,
+  `size` decimal(3,1) DEFAULT NULL,
+  `layers` varchar(49) DEFAULT NULL,
+  `bp` decimal(6,3) DEFAULT NULL,
+  `bt` decimal(5,2) DEFAULT NULL,
+  `rbp` varchar(5) DEFAULT NULL,
+  `fh` varchar(4) DEFAULT NULL,
+  `drw` varchar(22) DEFAULT NULL
+  project null
+project item null
+update null
+
+) 
+its table data structure 
+,}
+
+{
+its table sizes structure:
+CREATE TABLE if not exist `sizes` (
+  `element` varchar(7) DEFAULT NULL,
+  `type` varchar(8) DEFAULT NULL,
+  `size` decimal(5,2) DEFAULT NULL,
+  `nsize` decimal(5,2) DEFAULT NULL,
+  `od` decimal(5,2) DEFAULT NULL,
+  `di` decimal(5,2) DEFAULT NULL,
+  `thickness` decimal(3,2) DEFAULT NULL,
+  `len` decimal(5,1) DEFAULT NULL,
+  `width` decimal(5,2) DEFAULT NULL,
+  `height` decimal(5,2) DEFAULT NULL
+) 
+
+}
+
+{
+table over_need
+
+id in , az int , ta int , kam int , dar float ,..
+
+from over_need where rc > az and <= ta ) return all
+}
+
+{
+./materials.php list view of material
+./material.php form to add or edit save new update delete from its table and user can edit add or remove developing material table
+}
+
+{
+./flamearrestor.php as project item:
+( detonation or deflagration or...)
+( inline , end of line , ..., etc ...)
+( test type IIA , IA , IB ,... , etc ,...)
+(size of connection pipe)
+(material)
+(number count of this item)
+btn check and add or save ...
+
+}
+
+,
+{
+./breathervalve.php as project item
+
+}
+,
+{
+./vacuumbreaker.php as project item
+
+}
+,
+{
+./explosionvent.php as project item
+
+}
+,
+{
+./gravitydamper.php as project item
+
+}
+,
+{
+./awl.php : airwasher legacy as project item
+inputs: width as aww def 4 m  , height as awh def 3 m , zones :2 ;
+then results editable:
+collector count = zone number
+collector length as cl = aww - 0.152
+collector pipe size as cps: def 4 inch
+riser length as rl = awh - 0.0254*cps - 0.152
+riser spaces as rs: 0.304
+riser number zone 1 as rnz1 = round( cl/rs)
+rnz2= rnz1-1
+total riser numbers as trn = rnz1+rnz2
+nozzle space as ns = 0.076
+nozzles per riser npr= round (rl-0.075)/ns
+nozzles count az nc = npr* trn
+nozzle water flow as nwf= 2.64 lit/min
+total water flow as twflm= nc* nwf
+water flow m3/s as wf = twflm / 1000/60
+pump head needed:  34 m
+pump type: centrifuge 
+motor type : 3 phase ac electromotor
+pump eff = 67 % 
+motor power needed as pmp calculate
+20% margin
+then selection to close to it standard motor power kw
+then calc impeller diameter and then select from standards impeller diameter size 
+impeller thickness
+piping for suction and discharge 
+strainer 
+valve
+cast iron filter
+mesh steel filter
+junctions
+elbow
+flanges
+reducer 
+water distributer pipe as wdp :
+ wdp size = 2cps
+ wdp length= 0.66 cl
+ wdp input : discharge or output of the pump
+ wdp outputs: for each collector double output
+ wdp connection and flange and..
+collector cap = 2 per collector
+collector riser fitting : rn number riser size as rs 1 1/4 inch
+collector riser sealing per each riser
+riser cap : per each riser
+nozzles: each nozzle created by: nozzle body and nozzle head and steel clamp and oring and washer
+
+airbaffel as ab: 
+created by pre diecast mold ABS material to 0.4 m height as abh and 0.3m width as abeand 13.5 kg each
+d = int(aww/abw)
+ e= int(awh/abh) if e * abh< awh : e+=1
+if d* abw < aww: d+=1
+ab count as abc = e* d
+
+eliminators as awl:
+its blade like features now calc their size and structure until extreme detail to galvanize plate and screw or bolt nut and beyond
+
+}
+,
+{
+./awf.php : fog air washer or tiac system as project item
+airflows, width height
+nozzle counts
+input air temp and humidity 
+calc water need to saturated air with airflow
+calc high pressure nozzle around 50 yo 80 bar spray in 2 zone and water flow and nozzle counts
+calc plunger or piston pump to handle that pressure and its airflow , pump count , margin 15%
+piping , ro filtering water system and needs from storage and filter and all needs , ss304 or ss316 piping for pump and to nozzles and nozzle banks and storage and filterings and reverse osmosis system , flamges , pipes , connection, type elbow , t , reducer , diffuser, valves , shock valve , gate valve , control valve , bypass system , reverse cleaneng , find best nozzle tipical and.....
+}
+,
+{
+./controlboard.php تابلو برق  as project item
+board size , power of all components and main breaker , each motor had one breaker , each motor had one contactor, motor over 8kw had another contactor for soft start , soft starter device with its breaker : vfd as soft starter or Softstarter itself , psu , plc , io modules, digital input output module, analog input output module, hmi , signal lamp , control phase and its components, relays plc for each , termal fuse, fuses where needed, wiring , terminal , duct , cable , label , tag , connectors, ground system , busbars , pdoor , seald , rail , washer , screw , internal switch and lamps , sensors analog or digital , micro switch, humidity sensor , temprature sensor , luminations, vibration , voltage , current , rotary , slider... , actuators digital and analog: light , vfd , damper motor , alarm , servo motor , stepper motors , dervos , servo control moduls , control valve , gate valve , can bus , mod bus , Ethernet, 4 20ma , 0 10 vdc , 24v dc , 3phase ac , single ac , pwm , proximity, level switch , adc ,...
+with pid control loops and test mode and auto , and diagnosis....
+}
+,
+{
+./plc.php as project item
+plc 
+io modules, analog input , analog output,0 10vdc , 4 20ma ,  digital input , digital output , uart , serial , can , modbus , Ethernet, ir , radio , wifi , Bluetooth, lora...
+psu power switching
+relay plc 10v
+memory 
+main breaker total power of all ...
+for each motor:
+  add contactor of its power
+  add breaker of its power
+  if motor > 9kw
+    add contactor its power to soft starter line
+if softStarting:
+  if vfd as softstart:
+    add vfd >= largest motor
+  else : 
+    add soft starter >= largest motor
+  add breaker 
+control phase and its complete 
+termal switch and its complete
+signal lamps ...
+sensors:
+temprature, humidity, vibration, gyro , luminous, proximity, level , voltage , current , gas , smoke , fire , flame , sound, rotary , microswitch , position , rpm , rotation , tachometer, ....
+actuators:
+motor damper, servo , servo power , step motor , brushless, 3phase ac , ac motor , pwm , control valve , gate valve , lamp , 
+hmi , touchscreen, keboard , mice , mouse , roler , keypad , button , switch , rotary , spiner...
+pid control loop
+connector 
+cabinet 
+container 
+duct
+label 
+terminal
+tag
+wire
+cable
+plate
+rail
+busbar
+rotary switch , fuses
+control phase , ground ,...
+screw bolt nut
+washer
+seal
+door
+window plexiglass 
+glue
+glands 
+fish
+jack
+etc....
+
+}
+,
+{
+./fanring.php as project item:
+fan ring cylinder shape or bell shape  named bell ring for fans 
+
+}
+,
+{
+./cfan.php centrifuge fan as project item
+
+}
+,
+{
+./afan.php axial fan as project item
+axial fans :
+fan tip: def luwa , centigrad , toroid...
+diameter : from 200 to 1800mm def 1600mm
+blade count : up to 12 ,def 10 or 5
+blade attack angle : 5 to 35 : def 18
+rpm : 1400 and 1600mm def 1000rpm, for dia>1200 def 1000 rpm , dia<1200 def 1500 rpm 
+motor power: depend... in range 55kw , for over 1000mm dia def over 15kw and at 1600 def 45 , 1400 def 30 or 37
+material: def aluminum 
+drawing , balancing ,...
+}
+,
+{
+./damper.php as project item
+window size width and height
+damper type: gravity , vaccum , motor damper , manual , smoke , ...
+blade count
+blade len = window width 
+with or without columns in between
+blade type
+sealed material 
+material blade: def galvanize plate 1mm
+material frame : def galvanize 2mm
+with or without bush , tephlon or babit as yataghan 
+
+}
+,
+{
+./louver.php as project item 
+size , dimension, type , structure , material , .....
+}
+,
+{
+./heatcoil.php as project item
+size and dimension 
+rows: 1 , 2 , 3 rows
+don't height over 1.52 m 
+steam or heat water
+tube size
+without fin default 
+tube or لوله گازی به عنوان لوله ها
+
+}
+,
+{
+./arf.php air rotary filter as project item
+diameter: 2 , 2.5 , 3 meter
+length : 1.7 , 3.4 , 5.1 meter ( each 1.7 meter had one bruch head and mechanism and box)
+frame galvanize plate
+mechanism motor 0.25 kw gearbox
+rotator motor 1kw and gearbox and pulley and belt
+dust collector connection flexible to brush head , single duct to dust fan,
+fan centrifuge 3kw or 3.3kw or 5 or 7 up to 9kw def 3.3 , count 2
+fixed dust bag , count 2
+movable dust bag count 2
+filter mesh and filter material...
+}
+,
+{
+./diskfilter.php filter disk as project item
+rotator motor gearbox mechanism 0.5 kw
+disk diameter: 2,2.5,3 m
+brusher : single brushing for clean mechanism
+}
+,
+{
+./compactorfilter.php : textile compactor filter of filter plant as product project item...
+its base on mazzini compactor filter for textile filter plant ,...m
+}
+,
+{
+./duct.php duct for air ...
+shape def circular fir feed and , for return rectangular, dimension, length, type , vents place , airflow....
+}
+,
+{
+./vent.php venting air through them from or to duct : narrow vent  , return vent , circular vent , rectangle vent , with ir without wind breakers, with ir without control, with or without direction, material def plate galvanize 1mm can be other
+}
+,
+
+{
+./filterroom.php : textile filter room of filter plant as project item product :
+main fan ; centrifuge fan : up to 120kw , def 75 kw ferrari type , centigrade made , count 1
+compactor filter: mazzini... count 1
+arf : diameter def 2 , len def 3.4 , count 1
+filter disk : def 2 m , count 1
+
+sealing door + handle+vent + pressure sensor + hatch sight : count 1
+
+}
+,
+{
+./acstation.php: textile air conditioning station as project item product:
+multiple workspace: inputs: name machine name def spinner, length def 48 m , width def 21 m , height def 5 m , ach def 35 ;
+area= w* h , vol= area *h , airflow per hour as afph= vol * ach , afs = afph/3600 m3/s;
+free area , 48 m , 12 m , 5m , 20;
+total air flow as taf= foreach workspace add afs together;
+duct: feed duct , return duct 
+vent: feed vent , return vent
+arf 
+damper: return , exhaust, fresh 
+heat coil
+airwasher
+fan: axial fan : return fans , feed fans
+control board: plc , power , contactor , module and....
+each item and all items calculation on base of afs 
+drawings
+mto bom costs
+its collection of multiple products around dpaces afs;
+}
+,
+{
+./filterplant.php : textile filter plant as project item product:
+multiple filter rooms : def 2 : editable
+controlboard : plc , soft starter , ....
+}
+,
+
+{
+./aircooler.php as project item
+
+}
+,
+{
+./shelltube.php as project item
+
+}
+,
+{
+./pressurevessel.php as project item
+
+}
+,
+
+{
+./layout.php:
+{inputs:
+{dheet width as siw : number def 1000 mm}
+{sheet length as sih : number def 2000 mm}
+{sheet edge margin as siem : number def 4 mm}
+{edge distance margin as sedm: number def 3 mm;
+}
+{now place ruptures, ric number, of circle with mrdsod diameter for cutting sheet to be rupture as project item by sedm seperation between each vircle edge and siem space between sheet edge and circle edge }
+{
+creating drawing with unique color presentation for each rupture project item and sheet under it and label of rupture number inside its circle 
+export to scad json dxf svg png bmp
+}
+{
+./code.php auto generating cnc code , gcode and other types for cnc laser to use and cut it and export its...
+}
+}
+
+{
+./reports.php:
+advance report generator around one or multiple of project and one or multiple project item of them by user selection and generation of combination of 
+./bom.php of bom and material request and or mto : added to its must: waterjet/laser cutting , laser tag / wood box or cardboxing , shipping and material analysis and count if it must added to the mto for ruptures and holders and others and user can fill its values ..... each user added and wanted
+also: 
+drawing or layout or sketch of each user specify with some advance control to details and specs and addition and creation
+then user can save it or and send export and print it...
+}
+
+{
+./mr.php :
+material request for all
+for each holder as project item : 
+hic number of holder of specific type snd size and material : 
+each : shaft with: hod outside diameter holder + 5 to standard sizes are available rounding and , shaft len = holder thickness + 5 or 7 ... and material as inputed
+}
+
+
+{
+./drawing.php
+its attemp to drawing holder of rupture disk and layout and sketch it in 2d as 3d visualization and 3d presentation on 2d canvas and interactive sketch and drawing very rich visual feedbacks 
+also its at another canvas for rupture disk and its form and curve very accurate and rich extreme details 
+export to dxf json scad svg png
+}
+
+{
+user can download drawing files :
+./holder/ for holder of forward and reverse and each size in zip or rar 
+./pattern/ for rupture pattern of cutting drawing with its name and ...
+
+}
+
+
+
+
+
+ 
